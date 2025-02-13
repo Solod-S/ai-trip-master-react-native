@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import { Login } from "@/components";
 
 export default function Index() {
   return (
@@ -7,7 +8,7 @@ export default function Index() {
         flex: 1,
       }}
     >
-      <Text>Home</Text>
+      <Login />
     </View>
   );
 }
