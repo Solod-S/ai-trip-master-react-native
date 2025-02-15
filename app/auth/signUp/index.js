@@ -6,20 +6,27 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from "react-native";
+import { Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Colors } from "../../../constants/Colors";
-import { CustomKeyboardView } from "../../../components";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../config/fireBaseConfig";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Colors } from "../../../constants/Colors";
+import { CustomKeyboardView, Loading } from "../../../components";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
+import Toast from "react-native-toast-message";
+import { StatusBar } from "expo-status-bar";
+
+const isIphone = Platform.OS === "ios";
 
 export default function SignUp() {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -33,21 +40,111 @@ export default function SignUp() {
 
   const onCreateUserWithEmailAndPassword = async () => {
     if (!email || !password || !fullName) {
-      ToastAndroid.show("Please enter all details", ToastAndroid.TOP);
+      if (isIphone) {
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: "SignUp Failed",
+          text2: "Please fill all the fields",
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
+      } else {
+        ToastAndroid.show("Please enter all details", ToastAndroid.TOP);
+      }
       return;
     }
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(`user`, user);
-        // ...
-      })
-      .catch(error => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
+
+    setLoading(true);
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log("user", user);
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+
+      switch (errorCode) {
+        case "auth/email-already-in-use":
+          if (isIphone) {
+            Toast.show({
+              type: "error",
+              position: "top",
+              text1: "SignUp Failed",
+              text2: "Email Already In Use",
+              visibilityTime: 2000,
+              autoHide: true,
+              topOffset: 50,
+            });
+          } else {
+            ToastAndroid.show("Email Already In Use", ToastAndroid.LONG);
+          }
+
+          break;
+
+        case "auth/weak-password":
+          if (isIphone) {
+            Toast.show({
+              type: "error",
+              position: "top",
+              text1: "SignUp Failed",
+              text2: "Password should be at least 6 characters",
+              visibilityTime: 2000,
+              autoHide: true,
+              topOffset: 50,
+            });
+          } else {
+            ToastAndroid.show(
+              "Password should be at least 6 characters",
+              ToastAndroid.LONG
+            );
+          }
+          break;
+
+        case "auth/invalid-email":
+          if (isIphone) {
+            Toast.show({
+              type: "error",
+              position: "top",
+              text1: "SignUp Failed",
+              text2: "Invalid Email",
+              visibilityTime: 2000,
+              autoHide: true,
+              topOffset: 50,
+            });
+          } else {
+            ToastAndroid.show("Invalid Email", ToastAndroid.LONG);
+          }
+          break;
+
+        default:
+          const formattedMessage = errorCode
+            .replace("auth/", "")
+            .replace(/-/g, " ");
+          if (isIphone) {
+            Toast.show({
+              type: "error",
+              position: "top",
+              text1: "SignUp Failed",
+              text2: formattedMessage,
+              visibilityTime: 2000,
+              autoHide: true,
+              topOffset: 50,
+            });
+          } else {
+            ToastAndroid.show(formattedMessage, ToastAndroid.LONG);
+          }
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,12 +152,14 @@ export default function SignUp() {
       style={{ backgroundColor: Colors.white, flex: 1, paddingTop: 10 }}
       edges={["top"]}
     >
+      <StatusBar style="dark" />
       <CustomKeyboardView>
         <View style={{ padding: 25 }}>
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-          <Text
+          <Animated.Text
+            entering={FadeInDown.delay(100).duration(500).springify()}
             style={{
               marginTop: 5,
               fontFamily: "outfit-bolt",
@@ -68,9 +167,10 @@ export default function SignUp() {
             }}
           >
             Let's Create New Account
-          </Text>
+          </Animated.Text>
 
-          <Text
+          <Animated.Text
+            entering={FadeInDown.delay(200).duration(500).springify()}
             style={{
               fontFamily: "outfit",
               fontSize: hp(3.5),
@@ -79,9 +179,10 @@ export default function SignUp() {
             }}
           >
             Welcome aboard!
-          </Text>
+          </Animated.Text>
 
-          <Text
+          <Animated.Text
+            entering={FadeInDown.delay(300).duration(500).springify()}
             style={{
               fontFamily: "outfit",
               fontSize: hp(3.5),
@@ -90,10 +191,10 @@ export default function SignUp() {
             }}
           >
             Let's get started.
-          </Text>
+          </Animated.Text>
 
           {/* Email */}
-          <View style={{ marginTop: 40 }}>
+          <View style={{ marginTop: 30 }}>
             <Text style={{ fontSize: hp(2) }}>Email</Text>
             <TextInput
               onChangeText={value => setEmail(value)}
@@ -128,25 +229,39 @@ export default function SignUp() {
 
           <View>
             {/* Sign In  Btn*/}
-            <TouchableOpacity
-              style={{
-                marginTop: 40,
-                padding: 15,
-                backgroundColor: Colors.primary,
-                borderRadius: 15,
-              }}
-            >
-              <Text
-                onPress={() => onCreateUserWithEmailAndPassword()}
+
+            {loading ? (
+              <View
                 style={{
-                  fontSize: hp(2),
-                  color: Colors.white,
-                  textAlign: "center",
+                  marginTop: 40,
+                  padding: 15,
+                  backgroundColor: Colors.primary,
+                  borderRadius: 15,
                 }}
               >
-                Create Account
-              </Text>
-            </TouchableOpacity>
+                <Loading color="white" size={hp(3)} />
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={{
+                  marginTop: 40,
+                  padding: 15,
+                  backgroundColor: Colors.primary,
+                  borderRadius: 15,
+                }}
+              >
+                <Text
+                  onPress={() => onCreateUserWithEmailAndPassword()}
+                  style={{
+                    fontSize: hp(2),
+                    color: Colors.white,
+                    textAlign: "center",
+                  }}
+                >
+                  Create Account
+                </Text>
+              </TouchableOpacity>
+            )}
 
             {/* Create Account Btn*/}
             <TouchableOpacity

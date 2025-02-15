@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
+import Toast from "react-native-toast-message";
+import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
   useFonts({
@@ -8,8 +10,13 @@ export default function RootLayout() {
     "outfit-bolt": require("./../assets/fonts/Outfit-Bold.ttf"),
   });
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-    </Stack>
+    <>
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false }}>
+        {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+      <Toast />
+    </>
   );
 }
