@@ -5,14 +5,14 @@ import { Redirect } from "expo-router";
 
 export default function Index() {
   const user = auth?.currentUser;
-  console.log(`user`, user);
+
   return (
     <View
       style={{
         flex: 1,
       }}
     >
-      {user ? <Redirect href={"/myTrip"} /> : <Login />}
+      {!user ? <Redirect href={"/myTrip"} /> : <Login />}
     </View>
   );
 }
