@@ -1,12 +1,12 @@
-import { View, Text } from "react-native";
 import React, { useContext, useEffect } from "react";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { CreateTripContext } from "../../context";
 
 export default function SearchPlace() {
+  const route = useRouter();
   const navigation = useNavigation();
   const { tripData, setTripData } = useContext(CreateTripContext);
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function SearchPlace() {
         backgroundColor: Colors.white,
         flex: 1,
         padding: 20,
-        paddingTop: 60,
+        paddingTop: 40,
       }}
       edges={["top"]}
     >
@@ -40,11 +40,14 @@ export default function SearchPlace() {
         fetchDetails={true}
         onPress={(data, details = null) => {
           setTripData({
-            name: data.description,
-            coordinates: details?.geometry.location,
-            photoRef: details?.photos[0]?.photo_reference,
-            url: details?.url,
+            locationInfo: {
+              name: data.description,
+              coordinates: details?.geometry.location,
+              photoRef: details?.photos[0]?.photo_reference,
+              url: details?.url,
+            },
           });
+          route.push("createTrip/selectTraveler");
         }}
         query={{
           key: process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY,

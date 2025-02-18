@@ -1,30 +1,30 @@
-export const SelectTravellerList = [
+export const SelectTravelerList = [
   {
     id: 1,
     title: "Just Me",
-    desc: "Exploring the world on your own",
-    icon: "🧍", // Single person emoji without gender specification
+    desc: "Solo adventure",
+    icon: "🧍",
     people: "1 Person",
   },
   {
     id: 2,
     title: "Family",
-    desc: "Creating memories with loved ones",
-    icon: "/images/family.png", // Family with one child, simplifies the emoji to reduce issues
+    desc: "With loved ones",
+    icon: "👪",
     people: "2+ People",
   },
   {
     id: 3,
     title: "Friends",
-    desc: "Adventures with your closest pals",
-    icon: "👬", // Two boys or two girls (can represent friends)
+    desc: "With best pals",
+    icon: "👬",
     people: "2+ People",
   },
   {
     id: 4,
     title: "Couple",
-    desc: "A romantic getaway for two",
-    icon: "💑", // Couple with heart emoji, more consistent across platforms
+    desc: "Romantic trip",
+    icon: "💑",
     people: "2 People",
   },
 ];
