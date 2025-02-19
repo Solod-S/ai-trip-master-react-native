@@ -33,7 +33,7 @@ export const SelectBudgetOptions = [
   {
     id: 1,
     title: "Budget",
-    desc: "Affordable choices to save costs",
+    desc: "Budget-friendly options",
     icon: "💸",
   },
   {
@@ -51,7 +51,7 @@ export const SelectBudgetOptions = [
   {
     id: 4,
     title: "All-Inclusive",
-    desc: "Everything covered for a stress-free trip",
+    desc: "All set for a stress-free trip",
     icon: "🌟",
   },
 ];

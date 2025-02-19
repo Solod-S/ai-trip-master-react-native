@@ -4,6 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { CreateTripContext } from "../../context";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { Text, View } from "react-native";
 
 export default function SearchPlace() {
   const route = useRouter();
@@ -13,7 +18,8 @@ export default function SearchPlace() {
     navigation.setOptions({
       headerShown: true,
       headerTransparent: true,
-      headerTitle: "Search",
+      // headerTitle: "Search",
+      headerTitle: "",
       headerBackTitleVisible: false,
       headerBackTitle: "back",
       headerTintColor: "black",
@@ -34,6 +40,11 @@ export default function SearchPlace() {
       }}
       edges={["top"]}
     >
+      <View style={{ marginTop: 10 }}>
+        <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(4) }}>
+          Choose place
+        </Text>
+      </View>
       <GooglePlacesAutocomplete
         placeholder="Search Place"
         enablePoweredByContainer={false}

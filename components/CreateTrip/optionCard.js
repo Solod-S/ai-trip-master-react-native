@@ -6,7 +6,7 @@ import {
 } from "react-native-responsive-screen";
 import { Colors } from "../../constants/Colors";
 
-export function OptionCard({ option, selectedTraveler }) {
+export function OptionCard({ option, SelectBudgetOption }) {
   return (
     <View
       style={[
@@ -19,7 +19,7 @@ export function OptionCard({ option, selectedTraveler }) {
           backgroundColor: Colors.lightGray,
           borderRadius: 15,
         },
-        selectedTraveler?.id === option.id && { borderWidth: 3 },
+        SelectBudgetOption?.id === option.id && { borderWidth: 3 },
       ]}
     >
       <View>
