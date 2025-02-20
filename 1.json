@@ -1,0 +1,397 @@
+{
+  "flights": [
+    {
+      "airline": "Lufthansa",
+      "flight_number": "LH1234",
+      "price": 500,
+      "booking_url": "https://www.lufthansa.com"
+    },
+    {
+      "airline": "KLM",
+      "flight_number": "KL5678",
+      "price": 550,
+      "booking_url": "https://www.klm.com"
+    },
+    {
+      "airline": "Turkish Airlines",
+      "flight_number": "TK9012",
+      "price": 480,
+      "booking_url": "https://www.turkishairlines.com"
+    },
+    {
+      "airline": "Aeroflot",
+      "flight_number": "SU3456",
+      "price": 450,
+      "booking_url": "https://www.aeroflot.com"
+    }
+  ],
+  "hotels": [
+    {
+      "name": "Hotel Premier Palace Kyiv",
+      "rating": 4.5,
+      "total_reviews": 1200,
+      "img_url": "https://example.com/hotel1.jpg",
+      "price_per_night": 150,
+      "booking_url": "https://example.com/booking1",
+      "geo_coordinates": {
+        "latitude": 50.44,
+        "longitude": 30.52
+      }
+    },
+    {
+      "name": "Opera Hotel",
+      "rating": 4,
+      "total_reviews": 800,
+      "img_url": "https://example.com/hotel2.jpg",
+      "price_per_night": 100,
+      "booking_url": "https://example.com/booking2",
+      "geo_coordinates": {
+        "latitude": 50.44,
+        "longitude": 30.52
+      }
+    },
+    {
+      "name": "Ibis Kyiv City Center",
+      "rating": 3.5,
+      "total_reviews": 600,
+      "img_url": "https://example.com/hotel3.jpg",
+      "price_per_night": 75,
+      "booking_url": "https://example.com/booking3",
+      "geo_coordinates": {
+        "latitude": 50.45,
+        "longitude": 30.53
+      }
+    },
+    {
+      "name": "Pullman Kyiv City Centre",
+      "rating": 4.2,
+      "total_reviews": 950,
+      "img_url": "https://example.com/hotel4.jpg",
+      "price_per_night": 120,
+      "booking_url": "https://example.com/booking4",
+      "geo_coordinates": {
+        "latitude": 50.45,
+        "longitude": 30.5
+      }
+    },
+    {
+      "name": "Hyatt Regency Kyiv",
+      "rating": 4.8,
+      "total_reviews": 1500,
+      "img_url": "https://example.com/hotel5.jpg",
+      "price_per_night": 200,
+      "booking_url": "https://example.com/booking5",
+      "geo_coordinates": {
+        "latitude": 50.43,
+        "longitude": 30.51
+      }
+    },
+    {
+      "name": "Radisson Blu Podil",
+      "rating": 4,
+      "total_reviews": 750,
+      "img_url": "https://example.com/hotel6.jpg",
+      "price_per_night": 110,
+      "booking_url": "https://example.com/booking6",
+      "geo_coordinates": {
+        "latitude": 50.46,
+        "longitude": 30.54
+      }
+    }
+  ],
+  "places_to_visit": [
+    {
+      "name": "Saint Sophia's Cathedral",
+      "description": "A UNESCO World Heritage site.",
+      "address": "Vulitsya Volodymyrska, 24, Kyiv, 01001, Ukraine",
+      "entry_fees": 50,
+      "best_times_to_visit": "Morning or late afternoon",
+      "rating": 4.8,
+      "total_reviews": 2500
+    },
+    {
+      "name": "Kyiv Pechersk Lavra",
+      "description": "Monastery complex with caves and churches.",
+      "address": "Lavrska vul., 9, Kyiv, 02130, Ukraine",
+      "entry_fees": 30,
+      "best_times_to_visit": "Morning",
+      "rating": 4.6,
+      "total_reviews": 2000
+    },
+    {
+      "name": "Andriyivsky Descent",
+      "description": "Historic street with shops and cafes.",
+      "address": "Andriyivs'kyi Descent, Kyiv, Ukraine",
+      "entry_fees": 0,
+      "best_times_to_visit": "Anytime",
+      "rating": 4.5,
+      "total_reviews": 1800
+    },
+    {
+      "name": "National Museum of the History of Ukraine in the Second World War",
+      "description": "Museum dedicated to WWII.",
+      "address": "Lavrska vul., 24, Kyiv, 02000, Ukraine",
+      "entry_fees": 40,
+      "best_times_to_visit": "Late afternoon",
+      "rating": 4.2,
+      "total_reviews": 1500
+    },
+    {
+      "name": "Rodina Mat",
+      "description": "Monument to Motherland",
+      "address": "Lavrska vul., 24, Kyiv, 02000, Ukraine",
+      "entry_fees": 0,
+      "best_times_to_visit": "Sunrise or Sunset",
+      "rating": 4.7,
+      "total_reviews": 1200
+    },
+    {
+      "name": "Mariinsky Palace",
+      "description": "Official residence of the President of Ukraine",
+      "address": "Vul. Instytutska, 23, Kyiv, 01001, Ukraine",
+      "entry_fees": 0,
+      "best_times_to_visit": "Afternoon",
+      "rating": 4.4,
+      "total_reviews": 1000
+    }
+  ],
+  "restaurants": [
+    {
+      "name": "Kanapa Restaurant",
+      "cuisine_type": "Ukrainian",
+      "address": "St. Volodymyrska, 49, Kyiv, Ukraine",
+      "geo_coordinates": {
+        "latitude": 50.45,
+        "longitude": 30.52
+      },
+      "rating": 4.6,
+      "total_reviews": 1000,
+      "average_cost_per_meal": 25,
+      "currency": "UAH",
+      "booking_url": "https://example.com/kanapa"
+    },
+    {
+      "name": "Ostannya Barykada",
+      "cuisine_type": "Modern Ukrainian",
+      "address": "Lypkivska St, 16, Kyiv, Ukraine",
+      "geo_coordinates": {
+        "latitude": 50.45,
+        "longitude": 30.53
+      },
+      "rating": 4.4,
+      "total_reviews": 800,
+      "average_cost_per_meal": 30,
+      "currency": "UAH",
+      "booking_url": "https://example.com/ostbar"
+    },
+    {
+      "name": "Beef Meat & Wine",
+      "cuisine_type": "Steakhouse",
+      "address": "Shota Rustaveli St, 16, Kyiv, Ukraine",
+      "geo_coordinates": {
+        "latitude": 50.44,
+        "longitude": 30.51
+      },
+      "rating": 4.2,
+      "total_reviews": 600,
+      "average_cost_per_meal": 40,
+      "currency": "UAH",
+      "booking_url": "https://example.com/beef"
+    },
+    {
+      "name": "Chicken Kyiv",
+      "cuisine_type": "Fast Food",
+      "address": "Multiple Locations",
+      "geo_coordinates": {
+        "latitude": 50.45,
+        "longitude": 30.52
+      },
+      "rating": 4,
+      "total_reviews": 500,
+      "average_cost_per_meal": 15,
+      "currency": "UAH",
+      "booking_url": null
+    },
+    {
+      "name": "Puzata Hata",
+      "cuisine_type": "Traditional Ukrainian",
+      "address": "Multiple Locations",
+      "geo_coordinates": {
+        "latitude": 50.45,
+        "longitude": 30.52
+      },
+      "rating": 3.8,
+      "total_reviews": 700,
+      "average_cost_per_meal": 10,
+      "currency": "UAH",
+      "booking_url": null
+    }
+  ],
+  "local_transportation": [
+    {
+      "mode_of_transportation": "Metro",
+      "currency": "UAH",
+      "price_estimate": 5
+    },
+    {
+      "mode_of_transportation": "Taxi/Uber",
+      "currency": "UAH",
+      "price_estimate": 100
+    }
+  ],
+  "itinerary": [
+    {
+      "day": 1,
+      "date": "2023-02-20",
+      "timeline": [
+        {
+          "time": "08:00",
+          "activity": "Travel",
+          "details": "Arrive at Kyiv Boryspil International Airport (KBP), transfer to Hotel Premier Palace Kyiv via Uber."
+        },
+        {
+          "time": "10:00",
+          "activity": "Hotel",
+          "details": "Check in to Hotel Premier Palace Kyiv."
+        },
+        {
+          "time": "12:00",
+          "activity": "Meal",
+          "details": "Lunch at Kanapa Restaurant."
+        },
+        {
+          "time": "14:00",
+          "activity": "Visit",
+          "details": "Visit Saint Sophia's Cathedral."
+        },
+        {
+          "time": "16:00",
+          "activity": "Visit",
+          "details": "Explore Andriyivsky Descent."
+        },
+        {
+          "time": "19:00",
+          "activity": "Meal",
+          "details": "Dinner at Ostannya Barykada."
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "date": "2023-02-21",
+      "timeline": [
+        {
+          "time": "09:00",
+          "activity": "Visit",
+          "details": "Visit Kyiv Pechersk Lavra."
+        },
+        {
+          "time": "12:00",
+          "activity": "Meal",
+          "details": "Lunch at Chicken Kyiv near Lavra."
+        },
+        {
+          "time": "14:00",
+          "activity": "Visit",
+          "details": "Visit National Museum of the History of Ukraine in the Second World War."
+        },
+        {
+          "time": "17:00",
+          "activity": "Visit",
+          "details": "See Rodina Mat at sunset."
+        },
+        {
+          "time": "19:00",
+          "activity": "Meal",
+          "details": "Dinner at Beef Meat & Wine."
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "date": "2023-02-22",
+      "timeline": [
+        {
+          "time": "10:00",
+          "activity": "Visit",
+          "details": "Visit Mariinsky Palace."
+        },
+        {
+          "time": "12:00",
+          "activity": "Meal",
+          "details": "Lunch at Puzata Hata"
+        },
+        {
+          "time": "14:00",
+          "activity": "Free Time",
+          "details": "Shopping or exploring the city."
+        },
+        {
+          "time": "19:00",
+          "activity": "Meal",
+          "details": "Dinner at a restaurant of your choice."
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "date": "2023-02-23",
+      "timeline": [
+        {
+          "time": "09:00",
+          "activity": "Free Time",
+          "details": "Optional day trip or further exploration of Kyiv"
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "date": "2023-02-24",
+      "timeline": [
+        {
+          "time": "09:00",
+          "activity": "Free Time",
+          "details": "Optional day trip or further exploration of Kyiv"
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "date": "2023-02-25",
+      "timeline": [
+        {
+          "time": "09:00",
+          "activity": "Free Time",
+          "details": "Optional day trip or further exploration of Kyiv"
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "date": "2023-02-26",
+      "timeline": [
+        {
+          "time": "12:00",
+          "activity": "Check-out",
+          "details": "Check out from the hotel."
+        },
+        {
+          "time": "14:00",
+          "activity": "Travel",
+          "details": "Transfer to Kyiv Boryspil International Airport (KBP) for departure."
+        }
+      ]
+    },
+    {
+      "day": 8,
+      "date": "2023-02-27",
+      "timeline": [
+        {
+          "time": "00:00",
+          "activity": "Travel",
+          "details": "Arrive back in Kyiv."
+        }
+      ]
+    }
+  ]
+}

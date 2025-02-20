@@ -45,6 +45,7 @@ export default function SearchPlace() {
           Choose place
         </Text>
       </View>
+
       <GooglePlacesAutocomplete
         placeholder="Search Place"
         enablePoweredByContainer={false}

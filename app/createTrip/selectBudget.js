@@ -69,7 +69,7 @@ export default function SelectBudget() {
         backgroundColor: Colors.white,
         flex: 1,
         padding: 20,
-        paddingTop: 60,
+        paddingTop: 50,
       }}
       edges={["top"]}
     >
