@@ -30,6 +30,7 @@ export default function GenerateTrip() {
   const { tripData, setTripData } = useContext(CreateTripContext);
   const [isLoading, setIsLoading] = useState();
   const user = auth.currentUser;
+
   const GenerateAITrip = async () => {
     setIsLoading(true);
     const finalAIPrompt = prompt
@@ -62,7 +63,8 @@ export default function GenerateTrip() {
       });
 
       setIsLoading(false);
-      route.push("(tabs)/myTrip");
+
+      route.replace("(tabs)/myTrip");
       // router.push("/(tabs)/mytrip");
     } catch (error) {
       console.error(
