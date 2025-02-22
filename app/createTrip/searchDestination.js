@@ -10,7 +10,7 @@ import {
 } from "react-native-responsive-screen";
 import { Text, View } from "react-native";
 
-export default function SearchPlace() {
+export default function SearchDestination() {
   const route = useRouter();
   const navigation = useNavigation();
   const { tripData, setTripData } = useContext(CreateTripContext);
@@ -38,23 +38,25 @@ export default function SearchPlace() {
     >
       <View style={{ marginTop: 10 }}>
         <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(4) }}>
-          Choose place
+          Destination:
         </Text>
       </View>
 
       <GooglePlacesAutocomplete
         placeholder="Search Place"
         enablePoweredByContainer={false}
+        minLength={2}
         fetchDetails={true}
         onPress={(data, details = null) => {
-          setTripData({
+          setTripData(prev => ({
+            ...prev,
             locationInfo: {
               name: data.description,
               coordinates: details?.geometry.location,
               photoRef: details?.photos[0]?.photo_reference,
               url: details?.url,
             },
-          });
+          }));
           route.push("createTrip/selectTraveler");
         }}
         query={{

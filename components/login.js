@@ -33,7 +33,7 @@ export function Login() {
       <Animated.Image
         entering={FadeInUp.delay(100).duration(500).springify()}
         style={{ width: wp(100), height: hp(65) }}
-        source={require("../assets/images/login2.jpg")}
+        source={require("../assets/images/login.jpg")}
       />
       <Animated.View
         style={styles.container}

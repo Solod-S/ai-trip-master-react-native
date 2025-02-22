@@ -51,7 +51,7 @@ export default function ReviewTrip() {
       {/* Header */}
       <View>
         <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(4) }}>
-          Review your trip
+          Review your trip:
         </Text>
         <View style={{ marginTop: 10 }}>
           <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(2) }}>
@@ -62,7 +62,7 @@ export default function ReviewTrip() {
 
       {/* Data */}
       <View>
-        {/* Place info */}
+        {/*Start place info */}
         <View
           style={{
             // marginTop: 20,
@@ -80,7 +80,33 @@ export default function ReviewTrip() {
                 color: Colors.gray,
               }}
             >
-              Destination
+              Start place:
+            </Text>
+            <Text style={{ fontFamily: "outfit-medium", fontSize: hp(2.5) }}>
+              {tripData?.srcLocationInfo?.name}
+            </Text>
+          </View>
+        </View>
+
+        {/*Destination place info */}
+        <View
+          style={{
+            marginTop: 20,
+            display: "flex",
+            flexDirection: "row",
+            gap: 20,
+          }}
+        >
+          <Ionicons name="locate" size={34} color="black" />
+          <View>
+            <Text
+              style={{
+                fontFamily: "outfit",
+                fontSize: hp(2.5),
+                color: Colors.gray,
+              }}
+            >
+              Destination:
             </Text>
             <Text style={{ fontFamily: "outfit-medium", fontSize: hp(2.5) }}>
               {tripData?.locationInfo?.name}
@@ -106,7 +132,7 @@ export default function ReviewTrip() {
                 color: Colors.gray,
               }}
             >
-              Travel date
+              Travel date:
             </Text>
             <Text style={{ fontFamily: "outfit-medium", fontSize: hp(2.2) }}>
               {moment(tripData?.startDate).format("DD MMM") +
@@ -135,7 +161,7 @@ export default function ReviewTrip() {
                 color: Colors.gray,
               }}
             >
-              Who is Traveling
+              Who is Traveling:
             </Text>
             <Text style={{ fontFamily: "outfit-medium", fontSize: hp(2.2) }}>
               {tripData?.travelerCount?.title}
@@ -161,7 +187,7 @@ export default function ReviewTrip() {
                 color: Colors.gray,
               }}
             >
-              Budget
+              Budget:
             </Text>
             <Text style={{ fontFamily: "outfit-medium", fontSize: hp(2.2) }}>
               {tripData?.budget?.title}

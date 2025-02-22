@@ -113,7 +113,7 @@ export default function selectDates() {
           fontSize: hp(4),
         }}
       >
-        Who's Traveling
+        Who's Traveling:
       </Text>
       <View style={{ marginTop: 30 }}>
         <CalendarPicker

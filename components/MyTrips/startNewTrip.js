@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Colors } from "@/constants/Colors";
-import { useRouter } from "expo-router";
 
 export function StartNewTrip() {
   const route = useRouter();
@@ -36,7 +36,7 @@ export function StartNewTrip() {
         unforgettable memories!
       </Text>
       <TouchableOpacity
-        onPress={() => route.push("/createTrip/searchPlace")}
+        onPress={() => route.push("/createTrip/searchStartLocation")}
         style={{
           padding: 15,
           paddingHorizontal: 30,

@@ -71,10 +71,12 @@ export default function MyTrip() {
         style={{
           height: "100%",
         }}
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: 100,
-        }}
+        contentContainerStyle={
+          {
+            // flexGrow: 1,
+            // paddingBottom: 100,
+          }
+        }
       >
         <View
           style={{
@@ -85,15 +87,15 @@ export default function MyTrip() {
           }}
         >
           <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(3.5) }}>
-            myTrip
+            My Trip
           </Text>
           <TouchableOpacity
-            onPress={() => route.push("/createTrip/searchPlace")}
+            onPress={() => route.push("/createTrip/searchStartLocation")}
           >
             <Ionicons name="add-circle" size={40} color="black" />
           </TouchableOpacity>
         </View>
-        {/* {userTrips?.length === 0 ? <StartNewTrip /> : null} */}
+
         {isLoading ? (
           <ActivityIndicator
             style={{ marginTop: 40 }}

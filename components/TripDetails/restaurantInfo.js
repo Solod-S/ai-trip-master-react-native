@@ -10,7 +10,11 @@ import {
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import axios from "axios";
-import { Colors } from "../../constants/Colors"; // Ensure you have defined this
+import { Colors } from "../../constants/Colors";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export const RestaurantInfo = ({ restaurantData = [] }) => {
   const [restaurants, setRestaurants] = useState([]);
@@ -68,13 +72,20 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
     }
   }, [restaurantData]);
 
-  const handleExternalLink = item => {
-    const query = encodeURIComponent(item.name + item.address);
-    const googleSearchUrl = `https://www.google.com/search?q=${query}`;
+  const handleExternalLink = data => {
+    console.log(`data`, data.booking_url);
+    if (data?.booking_url?.includes("example.com")) {
+      const query = encodeURIComponent(data.name + data.address);
+      const googleSearchUrl = `https://www.google.com/search?q=${query}`;
 
-    Linking.openURL(googleSearchUrl).catch(err =>
-      alert("Failed to open URL", err.message)
-    );
+      Linking.openURL(googleSearchUrl).catch(err =>
+        alert("Failed to open URL", err.message)
+      );
+    } else {
+      Linking.openURL(data?.booking_url).catch(err =>
+        alert("Failed to open URL", err.message)
+      );
+    }
   };
 
   if (loading) {
@@ -85,8 +96,8 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
     <View style={{ marginTop: 15 }}>
       <Text
         style={{
-          fontFamily: "nunito-bold",
-          fontSize: 23,
+          fontFamily: "outfit-bold",
+          fontSize: hp(2.8),
           padding: 15,
         }}
       >
@@ -129,8 +140,8 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
               <Text
                 style={{
                   color: Colors.white,
-                  fontFamily: "nunito-bold",
-                  fontSize: 20,
+                  fontFamily: "outfit-bold",
+                  fontSize: hp(2.4),
                 }}
               >
                 {item.name} 🍽️
@@ -144,18 +155,18 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito",
-                    fontSize: 16,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.9),
                   }}
                 >
-                  {item?.average_cost_per_meal} {item?.currency} / meal
+                  ≈ {item?.average_cost_per_meal} {item?.currency} / meal
                 </Text>
 
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito",
-                    fontSize: 16,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.9),
                   }}
                 >
                   🧭 {item?.geo_coordinates?.latitude},{" "}
@@ -172,8 +183,8 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito-semibold",
-                    fontSize: 16,
+                    fontFamily: "outfit-semibold",
+                    fontSize: hp(1.9),
                   }}
                 >
                   Rating: {item?.rating} / 5
@@ -182,8 +193,8 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito",
-                    fontSize: 16,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.9),
                   }}
                 >
                   Reviews: {item?.total_reviews || 100}

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, SafeAreaView } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import { TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
 import {
   FlightInfo,
@@ -12,12 +10,15 @@ import {
   PlacesInfo,
   RestaurantInfo,
 } from "../../components/TripDetails";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import moment from "moment";
 
 function TripDetails() {
   const navigation = useNavigation();
-  const router = useRouter();
   const { trip } = useLocalSearchParams();
 
   const [imgUrl, setImgUrl] = useState("");
@@ -25,10 +26,6 @@ function TripDetails() {
   const [parsedTripData, setParsedTripData] = useState(null);
 
   useEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-
     if (trip) {
       try {
         const tripObject = typeof trip === "string" ? JSON.parse(trip) : trip;
@@ -47,97 +44,113 @@ function TripDetails() {
   }, [trip]);
 
   useEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerTransparent: true,
+      // headerTitle: "Search",
+      headerTitle: "",
+      headerBackTitleVisible: false,
+      headerBackTitle: "back",
+      headerTintColor: "black",
+    });
+  }, []);
+
+  useEffect(() => {
     if (parsedTripData?.locationInfo?.photoRef) {
       const photoRef = parsedTripData.locationInfo.photoRef;
       const placesImageURL = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1500&photoreference=${photoRef}&key=${process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY}`;
-      setImgUrl(placesImageURL);
+
+      fetch(placesImageURL, { method: "HEAD" })
+        .then(response => {
+          if (response.ok) {
+            setImgUrl(placesImageURL);
+          } else {
+            console.warn(`Image not available (status: ${response.status})`);
+          }
+        })
+        .catch(error => console.error("Error checking image:", error));
     }
   }, [parsedTripData]);
 
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollContentContainer}
+    <SafeAreaView
+      style={{
+        backgroundColor: Colors.white,
+        flex: 1,
+        alignItems: "center",
+      }}
+      edges={["top"]}
     >
-      <TouchableOpacity
-        style={styles.backButton}
-        activeOpacity={0.7}
-        onPress={() => router.back()}
-      >
-        <Ionicons name="return-up-back-outline" size={24} color="black" />
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scrollContentContainer}>
+        {imgUrl ? (
+          <Image style={styles.image} source={{ uri: imgUrl }} />
+        ) : (
+          <Image
+            source={require("../../assets/images/vacation.jpg")}
+            style={styles.defaultImage}
+          />
+        )}
 
-      {imgUrl ? (
-        <Image style={styles.image} source={{ uri: imgUrl }} />
-      ) : (
-        <Image
-          source={require("../../assets/images/vacation.jpg")}
-          style={styles.defaultImage}
-        />
-      )}
-
-      <View style={styles.infoContainer}>
-        <Text style={styles.tripName}>
-          {parsedTripData?.locationInfo?.name || "No Name Available"}
-        </Text>
-        <Text style={styles.tripDates}>
-          {moment(parsedTripData?.startDate).format("DD MMM, yyyy") ||
-            "1st January 2024"}{" "}
-          to{" "}
-          {moment(parsedTripData?.endDate).format("DD MMM, yyyy") ||
-            "1st January 2024"}
-        </Text>
-
-        <View style={styles.travellerInfo}>
-          {parsedTripData?.travelerCount?.icon === "/images/family.png" ? (
-            <Image
-              style={styles.icon}
-              source={require("../../assets/images/family.png")}
-            />
-          ) : (
-            <Text style={styles.iconText}>
-              {parsedTripData?.travelerCount?.icon}
-            </Text>
-          )}
-          <Text style={styles.travellerCount}>
-            {parsedTripData?.travelerCount?.people}
+        <View style={styles.infoContainer}>
+          <Text style={styles.tripName}>
+            {parsedTripData?.locationInfo?.name || "No Name Available"}
           </Text>
+          <Text style={styles.tripDates}>
+            {moment(parsedTripData?.startDate).format("DD MMM, yyyy") ||
+              "1st January 2024"}{" "}
+            to{" "}
+            {moment(parsedTripData?.endDate).format("DD MMM, yyyy") ||
+              "1st January 2024"}
+          </Text>
+
+          <View style={styles.travellerInfo}>
+            {parsedTripData?.travelerCount?.icon === "/images/family.png" ? (
+              <Image
+                style={styles.icon}
+                source={require("../../assets/images/family.png")}
+              />
+            ) : (
+              <Text style={styles.iconText}>
+                {parsedTripData?.travelerCount?.icon}
+              </Text>
+            )}
+            <Text style={styles.travellerCount}>
+              {parsedTripData?.travelerCount?.people}
+            </Text>
+          </View>
+
+          {/* <Text style={styles.budget}>{parsedTripData?.budget} Package</Text> */}
+
+          {/* Flight Info */}
+          <FlightInfo flightData={parsedTrip?.tripDetails?.flights} />
+
+          {/* Hotels Info */}
+          <HotelInfo hotelData={parsedTrip?.tripDetails?.hotels} />
+
+          {/* Transport Info */}
+          <TransportInfo
+            transportData={parsedTrip?.tripDetails?.local_transportation}
+          />
+
+          {/* Places Info */}
+          <PlacesInfo placesData={parsedTrip?.tripDetails?.places_to_visit} />
+
+          {/* Restaurant Info */}
+          <RestaurantInfo
+            restaurantData={parsedTrip?.tripDetails?.restaurants}
+          />
         </View>
-
-        {/* <Text style={styles.budget}>{parsedTripData?.budget} Package</Text> */}
-
-        {/* Flight Info */}
-        <FlightInfo flightData={parsedTrip?.tripDetails?.flights} />
-
-        {/* Hotels Info */}
-        <HotelInfo hotelData={parsedTrip?.tripDetails?.hotels} />
-
-        {/* Transport Info */}
-        <TransportInfo
-          transportData={parsedTrip?.tripDetails?.local_transportation}
-        />
-
-        {/* Places Info */}
-        <PlacesInfo placesData={parsedTrip?.tripDetails?.places_to_visit} />
-
-        {/* Restaurant Info */}
-        <RestaurantInfo restaurantData={parsedTrip?.tripDetails?.restaurants} />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 export default TripDetails;
 
 const styles = StyleSheet.create({
-  scrollView: {
-    paddingTop: 70,
-    backgroundColor: Colors.white,
-    height: "100%",
-  },
   scrollContentContainer: {
     flexGrow: 1,
-    paddingBottom: 100,
+    // paddingBottom: 100,
   },
   backButton: {
     marginBottom: 10,
@@ -145,11 +158,12 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 330,
+    height: hp(40),
+    borderRadius: 15,
   },
   defaultImage: {
     width: "100%",
-    height: 240,
+    height: hp(40),
     borderRadius: 15,
   },
   infoContainer: {
@@ -163,13 +177,13 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   tripName: {
-    fontFamily: "nunito-bold",
-    fontSize: 30,
+    fontFamily: "outfit-bold",
+    fontSize: hp(3.5),
     color: Colors.primary,
   },
   tripDates: {
-    fontFamily: "nunito",
-    fontSize: 15,
+    fontFamily: "outfit",
+    fontSize: hp(1.8),
     color: Colors.gray,
   },
   travellerInfo: {
@@ -181,16 +195,16 @@ const styles = StyleSheet.create({
     height: 24,
   },
   iconText: {
-    fontSize: 20,
+    fontSize: hp(2),
   },
   travellerCount: {
-    fontFamily: "nunito",
-    fontSize: 15,
+    fontFamily: "outfit",
+    fontSize: hp(1.8),
     color: Colors.gray,
   },
   budget: {
-    fontFamily: "nunito",
-    fontSize: 15,
+    fontFamily: "outfit",
+    fontSize: hp(1.8),
     color: Colors.gray,
   },
 });

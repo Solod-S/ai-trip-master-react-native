@@ -11,6 +11,10 @@ import {
 import Carousel from "react-native-reanimated-carousel";
 import axios from "axios";
 import { Colors } from "../../constants/Colors";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export const HotelInfo = ({ hotelData = [] }) => {
   const [hotels, setHotels] = useState([]);
@@ -69,8 +73,18 @@ export const HotelInfo = ({ hotelData = [] }) => {
     }
   }, [hotelData]);
 
-  const handleExternalLink = url => {
-    Linking.openURL(url).catch(err => alert("Failed to open URL", err.message));
+  const handleExternalLink = data => {
+    if (data?.booking_url?.includes("example.com")) {
+      const query = encodeURIComponent(data.name);
+      const googleSearchUrl = `https://www.google.com/search?q=${query}`;
+      Linking.openURL(googleSearchUrl).catch(err =>
+        alert("Failed to open URL", err.message)
+      );
+    } else {
+      Linking.openURL(data?.booking_url).catch(err =>
+        alert("Failed to open URL", err.message)
+      );
+    }
   };
 
   if (loading) {
@@ -81,8 +95,8 @@ export const HotelInfo = ({ hotelData = [] }) => {
     <View style={{ marginTop: 20 }}>
       <Text
         style={{
-          fontFamily: "nunito-bold",
-          fontSize: 23,
+          fontFamily: "outfit-bold",
+          fontSize: hp(2.8),
           padding: 15,
         }}
       >
@@ -98,7 +112,7 @@ export const HotelInfo = ({ hotelData = [] }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => handleExternalLink(item?.booking_url)}
+            onPress={() => handleExternalLink(item)}
             style={{
               flex: 1,
               borderRadius: 15,
@@ -125,8 +139,8 @@ export const HotelInfo = ({ hotelData = [] }) => {
               <Text
                 style={{
                   color: Colors.white,
-                  fontFamily: "nunito-bold",
-                  fontSize: 20,
+                  fontFamily: "outfit-bold",
+                  fontSize: hp(2.4),
                 }}
               >
                 {item.name} 🏢
@@ -140,18 +154,18 @@ export const HotelInfo = ({ hotelData = [] }) => {
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito",
-                    fontSize: 16,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.8),
                   }}
                 >
-                  {item?.price_per_night} / night
+                  ≈ {item?.price_per_night} / night
                 </Text>
 
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito",
-                    fontSize: 16,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.8),
                   }}
                 >
                   🧭 {item?.geo_coordinates?.latitude},{" "}
@@ -168,8 +182,8 @@ export const HotelInfo = ({ hotelData = [] }) => {
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito-semibold",
-                    fontSize: 16,
+                    fontFamily: "outfit-semibold",
+                    fontSize: hp(1.8),
                   }}
                 >
                   Rating: {item?.rating} / 5
@@ -178,8 +192,8 @@ export const HotelInfo = ({ hotelData = [] }) => {
                 <Text
                   style={{
                     color: Colors.white,
-                    fontFamily: "nunito",
-                    fontSize: 16,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.8),
                   }}
                 >
                   Reviews: {item?.total_reviews || 100}

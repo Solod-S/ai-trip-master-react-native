@@ -6,7 +6,7 @@ export function Loading({ size }) {
     <View style={{ height: size, aspectRatio: 1 }}>
       <LottieView
         style={{ flex: 1 }}
-        source={require("../../assets/images/trip_generating_animation3.json")}
+        source={require("../../assets/images/trip_generating_animation.json")}
         autoPlay
         loop
         speed={0.7}

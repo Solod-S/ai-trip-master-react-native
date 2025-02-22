@@ -27,6 +27,7 @@ const isIphone = Platform.OS === "ios";
 
 export default function GenerateTrip() {
   const route = useRouter();
+  const navigation = useNavigation();
   const { tripData, setTripData } = useContext(CreateTripContext);
   const [isLoading, setIsLoading] = useState();
   const user = auth.currentUser;
@@ -34,7 +35,7 @@ export default function GenerateTrip() {
   const GenerateAITrip = async () => {
     setIsLoading(true);
     const finalAIPrompt = prompt
-      // .replace("{source}", tripData?.srcLocationInfo?.name)
+      .replace("{source}", tripData?.srcLocationInfo?.name)
       .replace("{location}", tripData?.locationInfo?.name)
       .replace("{traveler}", tripData?.travelerCount?.title)
       .replace("{budget}", tripData?.budget)
@@ -53,8 +54,6 @@ export default function GenerateTrip() {
       console.log("JSON format result from Gemini API:", jsonResponse);
       const docId = Date.now().toString();
 
-      // console.log("TripData From Context", tripData);
-
       await setDoc(doc(db, "UserTrips", docId), {
         docId,
         userEmail: user.email,
@@ -65,7 +64,6 @@ export default function GenerateTrip() {
       setIsLoading(false);
 
       route.replace("(tabs)/myTrip");
-      // router.push("/(tabs)/mytrip");
     } catch (error) {
       console.error(
         "An error occurred in Gemini response/ Firebase save:",
@@ -73,6 +71,13 @@ export default function GenerateTrip() {
       );
     }
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: false,
+      headerLeft: () => null,
+    });
+  }, [navigation]);
 
   useEffect(() => {
     if (

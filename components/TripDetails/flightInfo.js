@@ -2,10 +2,24 @@ import { View, Text, Linking } from "react-native";
 import React from "react";
 import { Colors } from "../../constants/Colors";
 import { TouchableOpacity } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export const FlightInfo = ({ flightData }) => {
-  const handleExternalLink = url => {
-    Linking.openURL(url).catch(err => alert("Failed to open URL", err.message));
+  const handleExternalLink = data => {
+    if (data?.booking_url?.includes("example.com")) {
+      const query = encodeURIComponent(data.airline);
+      const googleSearchUrl = `https://www.google.com/search?q=${query}`;
+      Linking.openURL(googleSearchUrl).catch(err =>
+        alert("Failed to open URL", err.message)
+      );
+    } else {
+      Linking.openURL(data?.booking_url).catch(err =>
+        alert("Failed to open URL", err.message)
+      );
+    }
   };
 
   return (
@@ -25,8 +39,8 @@ export const FlightInfo = ({ flightData }) => {
       >
         <Text
           style={{
-            fontFamily: "nunito-bold",
-            fontSize: 23,
+            fontFamily: "outfit-bold",
+            fontSize: hp(2.8),
           }}
         >
           Flights
@@ -57,8 +71,8 @@ export const FlightInfo = ({ flightData }) => {
               >
                 <Text
                   style={{
-                    fontFamily: "nunito",
-                    fontSize: 15,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.8),
                   }}
                 >
                   {data.airline} ✈️
@@ -66,18 +80,18 @@ export const FlightInfo = ({ flightData }) => {
 
                 <Text
                   style={{
-                    fontFamily: "nunito-semibold",
-                    fontSize: 15,
+                    fontFamily: "outfit-semibold",
+                    fontSize: hp(1.8),
                     color: Colors.gray,
                   }}
                 >
-                  Cost: {data.price}
+                  Cost: ≈ {data.price}
                 </Text>
               </View>
 
               <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={() => handleExternalLink(data.booking_url)}
+                onPress={() => handleExternalLink(data)}
                 style={{
                   backgroundColor: Colors.primary,
                   paddingVertical: 10,
@@ -87,8 +101,8 @@ export const FlightInfo = ({ flightData }) => {
               >
                 <Text
                   style={{
-                    fontFamily: "nunito",
-                    fontSize: 15,
+                    fontFamily: "outfit",
+                    fontSize: hp(1.8),
                     color: Colors.white,
                     textAlign: "center",
                   }}
@@ -102,5 +116,3 @@ export const FlightInfo = ({ flightData }) => {
     </View>
   );
 };
-
- 

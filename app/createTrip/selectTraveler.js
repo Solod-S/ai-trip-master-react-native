@@ -44,7 +44,7 @@ export default function SelectTraveler() {
       edges={["top"]}
     >
       <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(4) }}>
-        Who's Traveling
+        Who's Traveling:
       </Text>
       <View style={{ marginTop: 10 }}>
         <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(2.5) }}>

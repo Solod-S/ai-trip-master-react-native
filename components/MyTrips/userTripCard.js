@@ -2,6 +2,10 @@ import { View, Text, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { Colors } from "../../constants/Colors";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const UserTripCard = ({ trip }) => {
   const [parsedTripData, setParsedTripData] = useState();
@@ -59,16 +63,16 @@ const UserTripCard = ({ trip }) => {
         <View>
           <Text
             style={{
-              fontFamily: "nunito-semibold",
-              fontSize: 20,
+              fontFamily: "outfit-semibold",
+              fontSize: hp(2.4),
             }}
           >
             {parsedTripData?.locationInfo?.name}
           </Text>
           <Text
             style={{
-              fontFamily: "nunito",
-              fontSize: 15,
+              fontFamily: "outfit",
+              fontSize: hp(1.8),
               color: Colors.gray,
             }}
           >
@@ -76,8 +80,8 @@ const UserTripCard = ({ trip }) => {
           </Text>
           <Text
             style={{
-              fontFamily: "nunito",
-              fontSize: 15,
+              fontFamily: "outfit",
+              fontSize: hp(1.8),
               color: Colors.gray,
             }}
           >

@@ -11,6 +11,10 @@ import {
 import MapView, { Marker } from "react-native-maps";
 import { Colors } from "../../constants/Colors";
 import axios from "axios";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export const PlacesInfo = ({ placesData }) => {
   const [coordinates, setCoordinates] = useState([]);
@@ -58,7 +62,7 @@ export const PlacesInfo = ({ placesData }) => {
     <View>
       <Text
         style={{
-          fontFamily: "nunito-bold",
+          fontFamily: "outfit-bold",
           fontSize: 23,
           marginVertical: 20,
           paddingLeft: 15,
@@ -144,37 +148,37 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   name: {
-    fontSize: 20,
+    fontSize: hp(2.4),
     marginBottom: 4,
-    fontFamily: "nunito-bold",
+    fontFamily: "outfit-bold",
   },
   description: {
-    fontSize: 16,
+    fontSize: hp(1.9),
     color: "#666",
     marginBottom: 10,
-    fontFamily: "nunito-semibold",
+    fontFamily: "outfit-semibold",
   },
   bestTimes: {
-    fontSize: 14,
+    fontSize: hp(1.7),
     marginBottom: 4,
-    fontFamily: "nunito-medium",
+    fontFamily: "outfit-medium",
   },
   entryFee: {
-    fontSize: 14,
+    fontSize: hp(1.7),
     marginBottom: 4,
-    fontFamily: "nunito-medium",
+    fontFamily: "outfit-medium",
   },
   address: {
-    fontSize: 14,
+    fontSize: hp(1.7),
     marginBottom: 4,
-    fontFamily: "nunito-medium",
+    fontFamily: "outfit-medium",
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   rating: {
-    fontSize: 14,
-    fontFamily: "nunito-medium",
+    fontSize: hp(1.7),
+    fontFamily: "outfit-medium",
   },
 });

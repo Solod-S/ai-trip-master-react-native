@@ -45,7 +45,7 @@ export const SelectBudgetOptions = [
   {
     id: 3,
     title: "Premium",
-    desc: "Luxury experiences without compromise",
+    desc: "Luxury experiences",
     icon: "💳",
   },
   {

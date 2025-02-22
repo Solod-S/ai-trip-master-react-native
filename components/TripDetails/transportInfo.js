@@ -1,6 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Colors } from "../../constants/Colors";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export const TransportInfo = ({ transportData }) => {
   return (
@@ -21,8 +25,8 @@ export const TransportInfo = ({ transportData }) => {
         >
           <Text
             style={{
-              fontFamily: "nunito-bold",
-              fontSize: 23,
+              fontFamily: "outfit-bold",
+              fontSize: hp(2.8),
             }}
           >
             Transport
@@ -42,20 +46,20 @@ export const TransportInfo = ({ transportData }) => {
             >
               <Text
                 style={{
-                  fontFamily: "nunito",
-                  fontSize: 15,
+                  fontFamily: "outfit",
+                  fontSize: hp(1.8),
                 }}
               >
                 {data.mode_of_transportation}
               </Text>
               <Text
                 style={{
-                  fontFamily: "nunito-semibold",
-                  fontSize: 15,
+                  fontFamily: "outfit-semibold",
+                  fontSize: hp(1.8),
                   color: Colors.gray,
                 }}
               >
-                {data.price_estimate} {data.currency}
+                ≈ {data.price_estimate} {data.currency}
               </Text>
             </View>
           ))}
