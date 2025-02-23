@@ -60,7 +60,7 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
     if (
       restaurantData &&
       Array.isArray(restaurantData) &&
-      restaurantData.length > 0
+      restaurantData?.length > 0
     ) {
       setRestaurants(restaurantData);
       // restaurantData.forEach((restaurant, index) => {
@@ -92,7 +92,9 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
     return <ActivityIndicator size="large" color={Colors.primary} />;
   }
 
-  return restaurants && Array.isArray(restaurants) && restaurants.length > 0 ? (
+  return restaurants &&
+    Array.isArray(restaurants) &&
+    restaurants?.length > 0 ? (
     <View style={{ marginTop: 15 }}>
       <Text
         style={{

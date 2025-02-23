@@ -9,7 +9,7 @@ const UserTripList = ({ userTrips }) => {
         userTrips.map((trip, index) => (
           <View key={trip.docId}>
             <UserTripDetailedCard trip={trip} />
-            {index < userTrips.length - 1 && <View style={styles.divider} />}
+            {index < userTrips?.length - 1 && <View style={styles.divider} />}
           </View>
         ))}
     </View>

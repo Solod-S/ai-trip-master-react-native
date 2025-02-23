@@ -13,8 +13,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { auth } from "../../../config/fireBaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../../constants/Colors";
 import { CustomKeyboardView, Loading } from "../../../components";
@@ -22,10 +21,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import Toast from "react-native-toast-message";
 import { StatusBar } from "expo-status-bar";
+import useAuthStore from "../../../store/useAuthStore";
 
 const isIphone = Platform.OS === "ios";
 
 export default function LogIn() {
+  const { login } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
@@ -55,12 +56,7 @@ export default function LogIn() {
         return;
       }
       setLoading(true);
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
+      await login(email, password);
       router.replace("/myTrip");
     } catch (error) {
       const errorCode = error.code;

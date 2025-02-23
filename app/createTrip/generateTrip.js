@@ -57,6 +57,7 @@ export default function GenerateTrip() {
       await setDoc(doc(db, "UserTrips", docId), {
         docId,
         userEmail: user.email,
+        userUid: user.uid,
         tripDetails: jsonResponse,
         tripData: JSON.stringify(tripData) || "",
       });

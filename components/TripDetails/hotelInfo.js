@@ -36,13 +36,13 @@ export const HotelInfo = ({ hotelData = [] }) => {
         response.data &&
         response.data.items &&
         Array.isArray(response.data.items) &&
-        response.data.items.length > 0
+        response?.data?.items?.length > 0
       ) {
         const imageUrl = response.data.items[0]?.link;
 
         if (imageUrl) {
           setHotels(prevHotels => {
-            if (!prevHotels || prevHotels.length <= index) {
+            if (!prevHotels || prevHotels?.length <= index) {
               console.error("Error prevHotel Not Found!");
               return prevHotels;
             }
@@ -62,7 +62,7 @@ export const HotelInfo = ({ hotelData = [] }) => {
   };
 
   useEffect(() => {
-    if (hotelData && Array.isArray(hotelData) && hotelData.length > 0) {
+    if (hotelData && Array.isArray(hotelData) && hotelData?.length > 0) {
       setHotels(hotelData);
       hotelData.forEach((hotel, index) => {
         // fetchGoogleImages(hotel.name, index);
@@ -91,7 +91,7 @@ export const HotelInfo = ({ hotelData = [] }) => {
     return <ActivityIndicator size="large" color={Colors.primary} />;
   }
 
-  return hotels && Array.isArray(hotels) && hotels.length > 0 ? (
+  return hotels && Array.isArray(hotels) && hotels?.length > 0 ? (
     <View style={{ marginTop: 20 }}>
       <Text
         style={{

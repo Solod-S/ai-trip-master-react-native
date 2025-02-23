@@ -3,6 +3,7 @@ import {
   getAuth,
   initializeAuth,
   getReactNativePersistence,
+  signOut,
 } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
@@ -34,3 +35,15 @@ try {
 const db = getFirestore(app);
 
 export { auth, db };
+
+// const logoutAndClearStorage = async () => {
+//   try {
+//     await signOut(auth); // Выход из аккаунта
+//     await AsyncStorage.clear(); // Очистка всего стораджа
+//     console.log("Вышел из аккаунта и очистил сторадж");
+//   } catch (e) {
+//     console.error("Ошибка при выходе и очистке", e);
+//   }
+// };
+
+// logoutAndClearStorage();

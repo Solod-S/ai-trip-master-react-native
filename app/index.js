@@ -1,34 +1,30 @@
 import { View, ActivityIndicator } from "react-native";
 import { Login } from "@/components";
-import { auth } from "../config/fireBaseConfig";
 import { Redirect } from "expo-router";
-
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useAuthStore from "../store/useAuthStore"; // Подключаем Zustand-хук
 
 export default function Index() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated, initAuthListener } = useAuthStore();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setUser(user);
-      setLoading(false);
-    });
-
+    const unsubscribe = initAuthListener();
     return () => unsubscribe();
   }, []);
+  console.log(`isAuthenticated`, isAuthenticated);
+  // console.log(`user`, user);
 
-  if (loading) {
+  if (isAuthenticated === undefined) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="black" />
       </View>
     );
   }
 
   return (
     <View style={{ flex: 1 }}>
-      {user ? <Redirect href={"/myTrip"} /> : <Login />}
+      {isAuthenticated ? <Redirect href={"/myTrip"} /> : <Login />}
     </View>
   );
 }

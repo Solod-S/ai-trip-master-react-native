@@ -4,9 +4,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  RefreshControl,
 } from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
 import {
@@ -25,7 +24,6 @@ export default function MyTrip() {
   const route = useRouter();
   const [userTrips, setUserTrips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false); // состояние для pull-to-refresh
 
   useEffect(() => {
     if (user) {
@@ -58,13 +56,6 @@ export default function MyTrip() {
     }
   };
 
-  // Функция для обновления списка при свайпе вниз
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await GetAllUserTrips();
-    setRefreshing(false);
-  }, []);
-
   return (
     <SafeAreaView
       style={{
@@ -80,9 +71,12 @@ export default function MyTrip() {
         style={{
           height: "100%",
         }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        } // Подключаем pull-to-refresh
+        contentContainerStyle={
+          {
+            // flexGrow: 1,
+            // paddingBottom: 100,
+          }
+        }
       >
         <View
           style={{
