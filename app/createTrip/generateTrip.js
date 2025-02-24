@@ -22,6 +22,7 @@ import { db, auth } from "../../config/fireBaseConfig";
 import moment from "moment";
 import { Loading } from "../../components/CreateTrip";
 import { chatSession, prompt } from "../../config/GeminiResponse";
+import { UsePreventBack } from "../../hooks";
 
 const isIphone = Platform.OS === "ios";
 
@@ -34,6 +35,7 @@ export default function GenerateTrip() {
 
   const GenerateAITrip = async () => {
     setIsLoading(true);
+
     const finalAIPrompt = prompt
       .replace("{source}", tripData?.srcLocationInfo?.name)
       .replace("{location}", tripData?.locationInfo?.name)
@@ -42,12 +44,13 @@ export default function GenerateTrip() {
       .replace("{startDate}", moment(tripData?.startDate).format("DD MMM"))
       .replace("{endDate}", moment(tripData?.endDate).format("DD MMM"));
 
-    console.log("Final AI prompt:", finalAIPrompt);
+    // console.log("Final AI prompt:", finalAIPrompt);
 
     try {
       const result = await chatSession.sendMessage(finalAIPrompt);
       if (!result) {
         ToastAndroid.show("Error Occurred! AI could not create trip.");
+        route.replace("/createTrip/generateTripError");
         return;
       }
       const jsonResponse = await JSON.parse(result.response.text());
@@ -70,8 +73,10 @@ export default function GenerateTrip() {
         "An error occurred in Gemini response/ Firebase save:",
         error
       );
+      route.replace("/createTrip/generateTripError");
     }
   };
+  UsePreventBack();
 
   useEffect(() => {
     navigation.setOptions({
@@ -89,7 +94,23 @@ export default function GenerateTrip() {
       !tripData.endDate
     ) {
       console.error("Invalid trip data:", tripData);
-      ToastAndroid.show("Incomplete trip data. Please go back and try again.");
+      if (isIphone) {
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: "Incomplete trip data. Please go back and try again.",
+          //  text2: "",
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
+      } else {
+        ToastAndroid.show(
+          "Incomplete trip data. Please go back and try again.",
+          ToastAndroid.LONG
+        );
+      }
+
       return;
     }
     GenerateAITrip();

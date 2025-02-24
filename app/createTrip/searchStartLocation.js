@@ -1,4 +1,10 @@
-import { View, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Platform,
+  ToastAndroid,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useContext, useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
@@ -9,6 +15,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Toast from "react-native-toast-message";
+
+const isIphone = Platform.OS === "ios";
 
 export default function SearchStartLocation() {
   const navigation = useNavigation();
@@ -49,17 +58,61 @@ export default function SearchStartLocation() {
           fetchDetails={true}
           onFail={error => console.log(error)}
           onPress={(data, details = null) => {
-            // console.log("data from autocomplete", data);
-            setTripData({
-              srcLocationInfo: {
-                name: data.description,
-                coordinates: details?.geometry.location,
-                photoRef: details?.photos[0]?.photo_reference,
-                url: details?.url,
-              },
-            });
+            try {
+              if (
+                !details?.photos?.[0]?.photo_reference ||
+                !data.description ||
+                !details?.geometry?.location ||
+                !details?.photos[0]?.photo_reference ||
+                !details?.url
+              ) {
+                if (isIphone) {
+                  Toast.show({
+                    type: "error",
+                    position: "top",
+                    text1: "This location cannot be selected...",
+                    //  text2: "",
+                    visibilityTime: 2000,
+                    autoHide: true,
+                    topOffset: 50,
+                  });
+                } else {
+                  ToastAndroid.show(
+                    "This location cannot be selected...",
+                    ToastAndroid.LONG
+                  );
+                }
+                return;
+              }
 
-            router.push("/createTrip/searchDestination");
+              setTripData({
+                srcLocationInfo: {
+                  name: data.description,
+                  coordinates: details?.geometry.location,
+                  photoRef: details?.photos[0]?.photo_reference,
+                  url: details?.url,
+                },
+              });
+
+              router.push("/createTrip/searchDestination");
+            } catch (error) {
+              if (isIphone) {
+                Toast.show({
+                  type: "error",
+                  position: "top",
+                  text1: "This location cannot be selected...",
+                  //  text2: "",
+                  visibilityTime: 2000,
+                  autoHide: true,
+                  topOffset: 50,
+                });
+              } else {
+                ToastAndroid.show(
+                  "This location cannot be selected...",
+                  ToastAndroid.LONG
+                );
+              }
+            }
           }}
           query={{
             key: process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY,

@@ -46,9 +46,8 @@ function TripDetails() {
   useEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerTransparent: true,
-      // headerTitle: "Search",
-      headerTitle: "",
+      headerTransparent: false,
+      headerTitle: "Trip Details",
       headerBackTitleVisible: false,
       headerBackTitle: "back",
       headerTintColor: "black",
@@ -77,11 +76,14 @@ function TripDetails() {
       style={{
         backgroundColor: Colors.white,
         flex: 1,
-        alignItems: "center",
+        // alignItems: "center",
       }}
       edges={["top"]}
     >
-      <ScrollView contentContainerStyle={styles.scrollContentContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {imgUrl ? (
           <Image style={styles.image} source={{ uri: imgUrl }} />
         ) : (
@@ -157,12 +159,12 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   image: {
-    width: "100%",
+    width: wp(100),
     height: hp(40),
     borderRadius: 15,
   },
   defaultImage: {
-    width: "100%",
+    width: wp(100),
     height: hp(40),
     borderRadius: 15,
   },

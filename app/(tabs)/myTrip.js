@@ -5,6 +5,9 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  BackHandler,
+  Platform,
+  ToastAndroid,
 } from "react-native";
 import React, { useEffect, useState, useCallback } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,24 +18,29 @@ import {
 } from "react-native-responsive-screen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { StartNewTrip } from "../../components";
-import { useRouter } from "expo-router";
-import { auth, db } from "../../config/fireBaseConfig";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { useNavigation, useRouter } from "expo-router";
+import { auth } from "../../config/fireBaseConfig";
+import { getMyTrips } from "../../utils";
 import UserTripList from "../../components/MyTrips/userTripList";
+import { useFocusEffect } from "@react-navigation/native";
+import { UsePreventBack } from "../../hooks";
+import Toast from "react-native-toast-message";
+
+const isIphone = Platform.OS === "ios";
 
 export default function MyTrip() {
+  const [addTripIsLoading, setAddTripIsLoading] = useState(false);
   const user = auth.currentUser;
   const route = useRouter();
   const [userTrips, setUserTrips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false); // состояние для pull-to-refresh
 
+  UsePreventBack();
+
   useEffect(() => {
     if (user) {
       GetAllUserTrips();
-    } else {
-      setIsLoading(false);
-      route.push("/");
     }
   }, [user]);
 
@@ -40,13 +48,7 @@ export default function MyTrip() {
     setIsLoading(true);
 
     try {
-      const q = query(
-        collection(db, "UserTrips"),
-        where("userUid", "==", user.uid),
-        orderBy("docId", "desc")
-      );
-      const querySnapshot = await getDocs(q);
-      const trips = querySnapshot.docs.map(doc => doc.data());
+      const trips = await getMyTrips(user.uid);
       setUserTrips(trips);
     } catch (error) {
       console.error(
@@ -58,12 +60,44 @@ export default function MyTrip() {
     }
   };
 
-  // Функция для обновления списка при свайпе вниз
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await GetAllUserTrips();
     setRefreshing(false);
   }, []);
+
+  const handleNewTrip = async () => {
+    try {
+      setAddTripIsLoading(true);
+      const trips = await getMyTrips(user.uid);
+      if (trips.length >= 15) {
+        if (isIphone) {
+          Toast.show({
+            type: "error",
+            position: "top",
+            text1:
+              "Travel limit of 15 trips has been exceeded. Please remove a trip and try again.",
+            visibilityTime: 2000,
+            autoHide: true,
+            topOffset: 50,
+          });
+        } else {
+          ToastAndroid.show(
+            "Travel limit of 5 trips has been exceeded. Please remove a trip and try again.",
+            ToastAndroid.LONG
+          );
+        }
+      } else {
+        route.push("/createTrip/searchStartLocation");
+      }
+    } catch (error) {
+      console.log(`Error in handleNewTrip:`, handleNewTrip);
+    } finally {
+      setTimeout(() => {
+        setAddTripIsLoading(false);
+      }, 1000);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -82,7 +116,7 @@ export default function MyTrip() {
         }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        } // Подключаем pull-to-refresh
+        }
       >
         <View
           style={{
@@ -93,10 +127,13 @@ export default function MyTrip() {
           }}
         >
           <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(3.5) }}>
-            My Trip
+            My Trips
           </Text>
           <TouchableOpacity
-            onPress={() => route.push("/createTrip/searchStartLocation")}
+            disabled={addTripIsLoading}
+            onPress={handleNewTrip}
+            style={{ opacity: addTripIsLoading ? 0.3 : 1 }}
+            // onPress={() => route.push("/createTrip/searchStartLocation")}
           >
             <Ionicons name="add-circle" size={40} color="black" />
           </TouchableOpacity>

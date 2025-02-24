@@ -14,7 +14,7 @@ export function TripScheduleTimeline({ singleParsedItinerary }) {
   const chooseIcon = activity => {
     switch (activity) {
       case "Travel":
-        return "cab";
+        return "plane";
       case "Arrival":
         return "location-arrow";
       case "Transportation":

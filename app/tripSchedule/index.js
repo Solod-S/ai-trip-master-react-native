@@ -33,9 +33,9 @@ function TripSchedule() {
   useEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerTransparent: true,
+      headerTransparent: false,
       // headerTitle: "Search",
-      headerTitle: "",
+      headerTitle: "Trip Schedule",
       headerBackTitleVisible: false,
       headerBackTitle: "back",
       headerTintColor: "black",
@@ -50,9 +50,12 @@ function TripSchedule() {
       }}
       edges={["top"]}
     >
-      <ScrollView contentContainerStyle={styles.scrollContentContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.mainView}>
-          <Text style={styles.mainViewText}>Trip Schedule</Text>
+          {/* <Text style={styles.mainViewText}>Trip Schedule</Text> */}
 
           <View style={styles.itineraryView}>
             {parsedItinerary?.map((itinerary, index) => (
@@ -80,11 +83,10 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   mainView: {
-    padding: 20,
+    padding: 10,
   },
   mainViewText: {
     fontFamily: "outfit-bold",
-    fontSize: 25,
     fontSize: hp(4),
   },
   itineraryView: {

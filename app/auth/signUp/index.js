@@ -60,7 +60,7 @@ export default function SignUp() {
 
     try {
       await register(email, password, fullName);
-      router.replace("/myTrip");
+      // router.replace("/myTrip");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

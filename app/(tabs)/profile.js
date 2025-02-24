@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  BackHandler,
   FlatList,
   Platform,
   Text,
@@ -8,7 +9,7 @@ import {
   View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { CreateTripContext } from "../../context";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,19 +22,20 @@ import Toast from "react-native-toast-message";
 import moment from "moment";
 import useAuthStore from "../../store/useAuthStore";
 import { Loading } from "../../components";
+import { UsePreventBack } from "../../hooks";
 
 const isIphone = Platform.OS === "ios";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
   const { user, logout } = useAuthStore();
-  const router = useRouter();
+
+  UsePreventBack();
 
   const handleLogOut = async () => {
     try {
       setLoading(true);
       await logout();
-      router.replace("/");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

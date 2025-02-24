@@ -8,7 +8,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Text, View } from "react-native";
+import { Platform, Text, ToastAndroid, View } from "react-native";
+import Toast from "react-native-toast-message";
+
+const isIphone = Platform.OS === "ios";
 
 export default function SearchDestination() {
   const route = useRouter();
@@ -48,16 +51,61 @@ export default function SearchDestination() {
         minLength={2}
         fetchDetails={true}
         onPress={(data, details = null) => {
-          setTripData(prev => ({
-            ...prev,
-            locationInfo: {
-              name: data.description,
-              coordinates: details?.geometry.location,
-              photoRef: details?.photos[0]?.photo_reference,
-              url: details?.url,
-            },
-          }));
-          route.push("createTrip/selectTraveler");
+          try {
+            if (
+              !details?.photos?.[0]?.photo_reference ||
+              !data.description ||
+              !details?.geometry?.location ||
+              !details?.photos[0]?.photo_reference ||
+              !details?.url
+            ) {
+              if (isIphone) {
+                Toast.show({
+                  type: "error",
+                  position: "top",
+                  text1: "This location cannot be selected...",
+                  //  text2: "",
+                  visibilityTime: 2000,
+                  autoHide: true,
+                  topOffset: 50,
+                });
+              } else {
+                ToastAndroid.show(
+                  "This location cannot be selected...",
+                  ToastAndroid.LONG
+                );
+              }
+              return;
+            }
+
+            setTripData(prev => ({
+              ...prev,
+              locationInfo: {
+                name: data.description,
+                coordinates: details?.geometry.location,
+                photoRef: details?.photos[0]?.photo_reference,
+                url: details?.url,
+              },
+            }));
+            route.push("createTrip/selectTraveler");
+          } catch (error) {
+            if (isIphone) {
+              Toast.show({
+                type: "error",
+                position: "top",
+                text1: "This location cannot be selected...",
+                //  text2: "",
+                visibilityTime: 2000,
+                autoHide: true,
+                topOffset: 50,
+              });
+            } else {
+              ToastAndroid.show(
+                "This location cannot be selected...",
+                ToastAndroid.LONG
+              );
+            }
+          }
         }}
         query={{
           key: process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY,
