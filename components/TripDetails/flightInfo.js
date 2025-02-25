@@ -10,7 +10,7 @@ import {
 export const FlightInfo = ({ flightData }) => {
   const handleExternalLink = data => {
     if (data?.booking_url?.includes("example.com")) {
-      const query = encodeURIComponent(data.airline);
+      const query = encodeURIComponent(data?.airline);
       const googleSearchUrl = `https://www.google.com/search?q=${query}`;
       Linking.openURL(googleSearchUrl).catch(err =>
         alert("Failed to open URL", err.message)
@@ -75,7 +75,10 @@ export const FlightInfo = ({ flightData }) => {
                     fontSize: hp(1.8),
                   }}
                 >
-                  {data.airline} ✈️
+                  {data?.airline?.length >= 15
+                    ? data?.airline?.slice(0, 15) + "..."
+                    : data?.airline}{" "}
+                  ✈️
                 </Text>
 
                 <Text
@@ -85,7 +88,7 @@ export const FlightInfo = ({ flightData }) => {
                     color: Colors.gray,
                   }}
                 >
-                  Cost: ≈ {data.price}
+                  Cost: ≈ {data?.price}
                 </Text>
               </View>
 

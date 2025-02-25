@@ -70,6 +70,7 @@ const useAuthStore = create(set => ({
         email,
         fullName,
         userId: response.user.uid,
+        lastGeneratedAt: null,
       });
 
       return { success: true, data: response.user };

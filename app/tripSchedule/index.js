@@ -1,19 +1,18 @@
 import { View, Text, SafeAreaView } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { TripScheduleTimeline } from "../../components/tripSchedule";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 function TripSchedule() {
   const navigation = useNavigation();
-  const router = useRouter();
 
   const [parsedItinerary, setParsedItinerary] = useState();
   const { itinerary } = useLocalSearchParams();
@@ -21,11 +20,6 @@ function TripSchedule() {
   useEffect(() => {
     if (itinerary) {
       const parsedItineraryObject = JSON.parse(itinerary);
-      // console.log(
-      //   "Parsed Itinerary Object:",
-      //   parsedItineraryObject,
-      //   typeof parsedItineraryObject
-      // );
       setParsedItinerary(parsedItineraryObject);
     }
   }, [itinerary]);
@@ -59,10 +53,15 @@ function TripSchedule() {
 
           <View style={styles.itineraryView}>
             {parsedItinerary?.map((itinerary, index) => (
-              <TripScheduleTimeline
+              <Animated.View
                 key={index}
-                singleParsedItinerary={itinerary}
-              />
+                entering={FadeInDown.duration(400)
+                  .delay(index * 200)
+                  .springify()
+                  .damping(6)}
+              >
+                <TripScheduleTimeline singleParsedItinerary={itinerary} />
+              </Animated.View>
             ))}
           </View>
         </View>

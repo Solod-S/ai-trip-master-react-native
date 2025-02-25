@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { Image } from "expo-image";
 import { ScrollView } from "react-native-virtualized-view";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Colors } from "../../constants/Colors";
 import {
   FlightInfo,
@@ -14,14 +15,16 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import moment from "moment";
+import { blurhash } from "../../utils";
 
 function TripDetails() {
   const navigation = useNavigation();
   const { trip } = useLocalSearchParams();
 
-  const [imgUrl, setImgUrl] = useState("");
+  const [imgUrl, setImgUrl] = useState(null);
   const [parsedTrip, setParsedTrip] = useState(null);
   const [parsedTripData, setParsedTripData] = useState(null);
 
@@ -67,7 +70,10 @@ function TripDetails() {
             console.warn(`Image not available (status: ${response.status})`);
           }
         })
-        .catch(error => console.error("Error checking image:", error));
+        .catch(error => {
+          console.error("Error checking image:", error);
+          setImgUrl("");
+        });
     }
   }, [parsedTripData]);
 
@@ -84,64 +90,80 @@ function TripDetails() {
         contentContainerStyle={styles.scrollContentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {imgUrl ? (
-          <Image style={styles.image} source={{ uri: imgUrl }} />
-        ) : (
+        {imgUrl && imgUrl.length > 0 && (
+          <Image
+            style={styles.image}
+            source={{ uri: imgUrl }}
+            placeholder={blurhash}
+            transition={500}
+          />
+        )}
+        {imgUrl && imgUrl.length <= 0 && (
           <Image
             source={require("../../assets/images/vacation.jpg")}
             style={styles.defaultImage}
+            placeholder={blurhash}
+            transition={500}
           />
         )}
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.tripName}>
-            {parsedTripData?.locationInfo?.name || "No Name Available"}
-          </Text>
-          <Text style={styles.tripDates}>
-            {moment(parsedTripData?.startDate).format("DD MMM, yyyy") ||
-              "1st January 2024"}{" "}
-            to{" "}
-            {moment(parsedTripData?.endDate).format("DD MMM, yyyy") ||
-              "1st January 2024"}
-          </Text>
-
-          <View style={styles.travellerInfo}>
-            {parsedTripData?.travelerCount?.icon === "/images/family.png" ? (
-              <Image
-                style={styles.icon}
-                source={require("../../assets/images/family.png")}
-              />
-            ) : (
-              <Text style={styles.iconText}>
-                {parsedTripData?.travelerCount?.icon}
-              </Text>
-            )}
-            <Text style={styles.travellerCount}>
-              {parsedTripData?.travelerCount?.people}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(100).springify().damping(6)}
+        >
+          <View style={styles.infoContainer}>
+            <Text style={styles.tripName}>
+              {parsedTripData?.locationInfo?.name || "No Name Available"}
             </Text>
+            <Text style={styles.tripDates}>
+              {moment(parsedTripData?.startDate).format("DD MMM, yyyy") ||
+                "1st January 2024"}{" "}
+              to{" "}
+              {moment(parsedTripData?.endDate).format("DD MMM, yyyy") ||
+                "1st January 2024"}
+            </Text>
+
+            <Text style={styles.budget}>
+              {parsedTripData?.budget?.title} Package
+            </Text>
+
+            <View style={styles.travellerInfo}>
+              {parsedTripData?.travelerCount?.icon === "/images/family.png" ? (
+                <Image
+                  style={styles.icon}
+                  source={require("../../assets/images/family.png")}
+                  placeholder={blurhash}
+                  transition={500}
+                />
+              ) : (
+                <Text style={styles.iconText}>
+                  {parsedTripData?.travelerCount?.icon}
+                </Text>
+              )}
+              <Text style={styles.travellerCount}>
+                {parsedTripData?.travelerCount?.people}
+              </Text>
+            </View>
+
+            {/* Flight Info */}
+            <FlightInfo flightData={parsedTrip?.tripDetails?.flights} />
+
+            {/* Hotels Info */}
+            <HotelInfo hotelData={parsedTrip?.tripDetails?.hotels} />
+
+            {/* Transport Info */}
+            <TransportInfo
+              transportData={parsedTrip?.tripDetails?.local_transportation}
+            />
+
+            {/* Places Info */}
+            <PlacesInfo placesData={parsedTrip?.tripDetails?.places_to_visit} />
+
+            {/* Restaurant Info */}
+            <RestaurantInfo
+              restaurantData={parsedTrip?.tripDetails?.restaurants}
+            />
           </View>
-
-          {/* <Text style={styles.budget}>{parsedTripData?.budget} Package</Text> */}
-
-          {/* Flight Info */}
-          <FlightInfo flightData={parsedTrip?.tripDetails?.flights} />
-
-          {/* Hotels Info */}
-          <HotelInfo hotelData={parsedTrip?.tripDetails?.hotels} />
-
-          {/* Transport Info */}
-          <TransportInfo
-            transportData={parsedTrip?.tripDetails?.local_transportation}
-          />
-
-          {/* Places Info */}
-          <PlacesInfo placesData={parsedTrip?.tripDetails?.places_to_visit} />
-
-          {/* Restaurant Info */}
-          <RestaurantInfo
-            restaurantData={parsedTrip?.tripDetails?.restaurants}
-          />
-        </View>
+        </Animated.View>
       </ScrollView>
     </SafeAreaView>
   );

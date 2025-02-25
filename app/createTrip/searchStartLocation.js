@@ -70,7 +70,7 @@ export default function SearchStartLocation() {
                   Toast.show({
                     type: "error",
                     position: "top",
-                    text1: "This location cannot be selected...",
+                    text2: "This location cannot be selected...",
                     //  text2: "",
                     visibilityTime: 2000,
                     autoHide: true,
@@ -100,7 +100,7 @@ export default function SearchStartLocation() {
                 Toast.show({
                   type: "error",
                   position: "top",
-                  text1: "This location cannot be selected...",
+                  text2: "This location cannot be selected...",
                   //  text2: "",
                   visibilityTime: 2000,
                   autoHide: true,

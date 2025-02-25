@@ -3,11 +3,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   Linking,
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import { Image } from "expo-image";
 import Carousel from "react-native-reanimated-carousel";
 import axios from "axios";
 import { Colors } from "../../constants/Colors";
@@ -15,6 +15,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { blurhash } from "../../utils";
 
 export const HotelInfo = ({ hotelData = [] }) => {
   const [hotels, setHotels] = useState([]);
@@ -125,6 +126,8 @@ export const HotelInfo = ({ hotelData = [] }) => {
               source={require("../../assets/images/hotel.jpg")}
               style={{ width: "100%", height: "100%", borderRadius: 15 }}
               resizeMode="cover"
+              placeholder={blurhash}
+              transition={500}
             />
             <View
               style={{

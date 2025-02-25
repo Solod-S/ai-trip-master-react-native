@@ -1,11 +1,4 @@
-import {
-  FlatList,
-  Platform,
-  Text,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
@@ -16,13 +9,11 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Toast from "react-native-toast-message";
+
 import moment from "moment";
 
-const isIphone = Platform.OS === "ios";
-
 export default function ReviewTrip() {
-  const route = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
   const { tripData } = useContext(CreateTripContext);
 
@@ -200,7 +191,7 @@ export default function ReviewTrip() {
       <View>
         <TouchableOpacity
           disabled={!tripData}
-          onPress={() => route.replace("/createTrip/generateTrip")}
+          onPress={() => router.replace("/createTrip/generateTrip")}
           style={{
             padding: 15,
             paddingHorizontal: 30,

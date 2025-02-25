@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   Platform,
   Text,
   ToastAndroid,
@@ -9,7 +10,7 @@ import {
   View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
@@ -23,12 +24,38 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import useAuthStore from "../../store/useAuthStore";
 import { Loading } from "../../components";
 import { UsePreventBack } from "../../hooks";
+import { useFocusEffect, useNavigation } from "expo-router";
 
 const isIphone = Platform.OS === "ios";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
   const { user, logout } = useAuthStore();
+
+  const navigation = useNavigation();
+
+  useFocusEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => null, // Убираем кнопку назад
+      gestureEnabled: false, // Отключаем жесты
+    });
+
+    navigation.getParent()?.setOptions({ gestureEnabled: false });
+
+    // Обработчик нажатия кнопки "Назад" на Android
+    const hardwareBackPressHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        return true; // Блокируем действие по нажатию кнопки "Назад"
+      }
+    );
+
+    return () => {
+      navigation.getParent()?.setOptions({ gestureEnabled: true });
+      navigation.setOptions({ gestureEnabled: true });
+      hardwareBackPressHandler.remove();
+    };
+  });
 
   // UsePreventBack();
 

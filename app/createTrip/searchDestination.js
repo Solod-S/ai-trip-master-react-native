@@ -14,9 +14,9 @@ import Toast from "react-native-toast-message";
 const isIphone = Platform.OS === "ios";
 
 export default function SearchDestination() {
-  const route = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
-  const { tripData, setTripData } = useContext(CreateTripContext);
+  const { setTripData } = useContext(CreateTripContext);
   useEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -63,7 +63,7 @@ export default function SearchDestination() {
                 Toast.show({
                   type: "error",
                   position: "top",
-                  text1: "This location cannot be selected...",
+                  text2: "This location cannot be selected...",
                   //  text2: "",
                   visibilityTime: 2000,
                   autoHide: true,
@@ -87,13 +87,13 @@ export default function SearchDestination() {
                 url: details?.url,
               },
             }));
-            route.push("createTrip/selectTraveler");
+            router.push("createTrip/selectTraveler");
           } catch (error) {
             if (isIphone) {
               Toast.show({
                 type: "error",
                 position: "top",
-                text1: "This location cannot be selected...",
+                text2: "This location cannot be selected...",
                 //  text2: "",
                 visibilityTime: 2000,
                 autoHide: true,

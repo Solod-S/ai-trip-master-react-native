@@ -57,7 +57,6 @@ export default function LogIn() {
       }
       setLoading(true);
       await login(email, password);
-      // router.replace("/myTrip");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

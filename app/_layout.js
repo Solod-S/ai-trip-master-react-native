@@ -26,8 +26,8 @@ const MainLayout = () => {
     const inApp = segments[0] == "(tabs)";
     if (isAuthenticated && !inApp) {
       // if user authenticated
-      // and not in (tabs) => redirect myTrip
-      router.replace("myTrip");
+      // and not in (tabs) => redirect myTrips
+      router.replace("myTrips");
     } else if (isAuthenticated == false) {
       // if user is not authenticated
       //  redirect to home

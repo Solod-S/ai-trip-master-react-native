@@ -1,4 +1,5 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { Colors } from "../../constants/Colors";
@@ -7,11 +8,12 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useRouter } from "expo-router";
+import { blurhash } from "../../utils";
 
-const UserTripDetailedCard = ({ trip }) => {
+const UserTripDetailedCard = ({ trip, handleDelete }) => {
   const router = useRouter();
   const [parsedTripData, setParsedTripData] = useState(null);
-  const [imgUrl, setImgUrl] = useState("");
+  const [imgUrl, setImgUrl] = useState(null);
 
   useEffect(() => {
     if (trip && trip?.tripData) {
@@ -33,14 +35,21 @@ const UserTripDetailedCard = ({ trip }) => {
             console.warn(`Image not available (status: ${response.status})`);
           }
         })
-        .catch(error => console.error("Error checking image:", error));
+        .catch(error => {
+          setImgUrl("");
+          console.error("Error checking image:", error);
+        });
     }
   }, [parsedTripData]);
 
   return (
     parsedTripData && (
-      <View style={{ marginTop: 20 }}>
-        {imgUrl ? (
+      <View
+        style={{
+          marginTop: 20,
+        }}
+      >
+        {/* {imgUrl ? (
           <Image
             style={{
               width: "100%",
@@ -49,6 +58,8 @@ const UserTripDetailedCard = ({ trip }) => {
               borderRadius: 15,
             }}
             source={{ uri: imgUrl }}
+            placeholder={blurhash}
+            transition={500}
           />
         ) : (
           <Image
@@ -58,6 +69,34 @@ const UserTripDetailedCard = ({ trip }) => {
               height: hp(29),
               borderRadius: 15,
             }}
+            placeholder={blurhash}
+            transition={500}
+          />
+        )} */}
+
+        {imgUrl && imgUrl.length > 0 && (
+          <Image
+            style={{
+              width: "100%",
+              height: 240,
+              height: hp(29),
+              borderRadius: 15,
+            }}
+            source={{ uri: imgUrl }}
+            placeholder={blurhash}
+            transition={500}
+          />
+        )}
+        {imgUrl && imgUrl.length <= 0 && (
+          <Image
+            source={require("../../assets/images/vacation.jpg")}
+            style={{
+              width: "100%",
+              height: hp(29),
+              borderRadius: 15,
+            }}
+            placeholder={blurhash}
+            transition={500}
           />
         )}
         <View
@@ -163,6 +202,28 @@ const UserTripDetailedCard = ({ trip }) => {
             }}
           >
             Trip Schedule
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleDelete(trip.docId)}
+          activeOpacity={0.7}
+          style={{
+            backgroundColor: Colors.white,
+            borderWidth: 2,
+            padding: 15,
+            borderRadius: 15,
+            marginBottom: 15,
+          }}
+        >
+          <Text
+            style={{
+              color: Colors.primary,
+              textAlign: "center",
+              fontFamily: "outfit",
+              fontSize: hp(1.8),
+            }}
+          >
+            Delete
           </Text>
         </TouchableOpacity>
       </View>

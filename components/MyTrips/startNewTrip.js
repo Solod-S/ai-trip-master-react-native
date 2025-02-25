@@ -1,17 +1,16 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "@/constants/Colors";
-import { useRouter } from "expo-router";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-export function StartNewTrip() {
-  const route = useRouter();
+export function StartNewTrip({ handleNewTrip }) {
   return (
-    <View
+    <Animated.View
       style={{
         padding: 15,
         marginTop: 50,
@@ -19,6 +18,7 @@ export function StartNewTrip() {
         alignItems: "center",
         gap: 20,
       }}
+      entering={FadeInDown.duration(400).delay(300).springify().damping(6)}
     >
       <Ionicons name="location" size={30} color="black" />
       <Text style={{ fontFamily: "outfit-medium", fontSize: hp(3) }}>
@@ -36,7 +36,7 @@ export function StartNewTrip() {
         unforgettable memories!
       </Text>
       <TouchableOpacity
-        onPress={() => route.push("/createTrip/searchStartLocation")}
+        onPress={handleNewTrip}
         style={{
           padding: 15,
           paddingHorizontal: 30,
@@ -55,6 +55,6 @@ export function StartNewTrip() {
           Start new trip
         </Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 }

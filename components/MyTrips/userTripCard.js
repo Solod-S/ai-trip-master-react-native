@@ -1,4 +1,5 @@
-import { View, Text, Image } from "react-native";
+import { View, Text } from "react-native";
+import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { Colors } from "../../constants/Colors";
@@ -6,6 +7,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { blurhash } from "../../utils";
 
 const UserTripCard = ({ trip }) => {
   const [parsedTripData, setParsedTripData] = useState();
@@ -48,6 +50,8 @@ const UserTripCard = ({ trip }) => {
               borderRadius: 15,
             }}
             source={{ uri: imgUrl }}
+            placeholder={blurhash}
+            transition={500}
           />
         ) : (
           <Image
@@ -57,6 +61,8 @@ const UserTripCard = ({ trip }) => {
               height: 100,
               borderRadius: 15,
             }}
+            placeholder={blurhash}
+            transition={500}
           />
         )}
 

@@ -1,13 +1,5 @@
-import {
-  FlatList,
-  Platform,
-  Text,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { doc, setDoc } from "firebase/firestore";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Platform, Text, ToastAndroid, View } from "react-native";
+import { doc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { CreateTripContext } from "../../context";
@@ -27,9 +19,9 @@ import { UsePreventBack } from "../../hooks";
 const isIphone = Platform.OS === "ios";
 
 export default function GenerateTrip() {
-  const route = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
-  const { tripData, setTripData } = useContext(CreateTripContext);
+  const { tripData } = useContext(CreateTripContext);
   const [isLoading, setIsLoading] = useState();
   const user = auth.currentUser;
 
@@ -50,9 +42,10 @@ export default function GenerateTrip() {
       const result = await chatSession.sendMessage(finalAIPrompt);
       if (!result) {
         ToastAndroid.show("Error Occurred! AI could not create trip.");
-        route.replace("/createTrip/generateTripError");
+        router.replace("/createTrip/generateTripError");
         return;
       }
+
       const jsonResponse = await JSON.parse(result.response.text());
       console.log("JSON format result from Gemini API:", jsonResponse);
       const docId = Date.now().toString();
@@ -65,15 +58,20 @@ export default function GenerateTrip() {
         tripData: JSON.stringify(tripData) || "",
       });
 
-      setIsLoading(false);
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        lastGeneratedAt: Timestamp.now(),
+      });
 
-      route.replace("(tabs)/myTrip");
+      router.replace("(tabs)/myTrips");
     } catch (error) {
       console.error(
         "An error occurred in Gemini response/ Firebase save:",
         error
       );
-      route.replace("/createTrip/generateTripError");
+      router.replace("/createTrip/generateTripError");
+    } finally {
+      setIsLoading(false);
     }
   };
   UsePreventBack();
@@ -98,7 +96,7 @@ export default function GenerateTrip() {
         Toast.show({
           type: "error",
           position: "top",
-          text1: "Incomplete trip data. Please go back and try again.",
+          text2: "Incomplete trip data. Please go back and try again.",
           //  text2: "",
           visibilityTime: 2000,
           autoHide: true,

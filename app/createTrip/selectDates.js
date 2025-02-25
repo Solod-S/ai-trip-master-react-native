@@ -23,7 +23,7 @@ const isIphone = Platform.OS === "ios";
 export default function selectDates() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const route = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
   const { setTripData } = useContext(CreateTripContext);
 
@@ -45,7 +45,7 @@ export default function selectDates() {
         Toast.show({
           type: "info",
           position: "top",
-          text1: "Please select Start and End Date",
+          text2: "Please select Start and End Date",
           //  text2: "",
           visibilityTime: 2000,
           autoHide: true,
@@ -66,7 +66,7 @@ export default function selectDates() {
         Toast.show({
           type: "info",
           position: "top",
-          text1: "Please select Start and End Date",
+          text2: "Please select Start and End Date",
           //  text2: "",
           visibilityTime: 2000,
           autoHide: true,
@@ -87,7 +87,7 @@ export default function selectDates() {
       endDate,
       totalNoOfDays: totalNoOfDays + 1,
     }));
-    route.push("/createTrip/selectBudget");
+    router.push("/createTrip/selectBudget");
   };
   const onDateChange = (date, type) => {
     if (type === "START_DATE") {

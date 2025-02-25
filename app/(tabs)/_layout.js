@@ -3,8 +3,10 @@ import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "../../constants/Colors";
 import { StatusBar } from "expo-status-bar";
+import { UsePreventBack } from "../../hooks";
 
 export default function TabLayout() {
+  UsePreventBack();
   return (
     <>
       <StatusBar style="dark" />
@@ -15,7 +17,7 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="myTrip"
+          name="myTrips"
           options={{
             tabBarLabel: "My Trip",
             tabBarIcon: ({ color }) => (

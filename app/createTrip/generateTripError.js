@@ -1,37 +1,19 @@
-import {
-  FlatList,
-  Platform,
-  Text,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { doc, setDoc } from "firebase/firestore";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useContext, useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
-import { CreateTripContext } from "../../context";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Toast from "react-native-toast-message";
-import { db, auth } from "../../config/fireBaseConfig";
-import moment from "moment";
+
 import { LoadingV2 } from "../../components/CreateTrip";
-import { chatSession, prompt } from "../../config/GeminiResponse";
 import { UsePreventBack } from "../../hooks";
 
-const isIphone = Platform.OS === "ios";
-
 export default function GenerateTripError() {
-  const route = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
-  const { tripData, setTripData } = useContext(CreateTripContext);
-  const [isLoading, setIsLoading] = useState();
-  const user = auth.currentUser;
 
   UsePreventBack();
 
@@ -93,7 +75,7 @@ export default function GenerateTripError() {
       </View>
       <View style={{ width: "100%" }}>
         <TouchableOpacity
-          onPress={() => route.push("/myTrip")}
+          onPress={() => router.push("/myTrips")}
           style={{
             padding: 15,
             paddingHorizontal: 30,

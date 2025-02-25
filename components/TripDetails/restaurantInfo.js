@@ -3,18 +3,18 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   Linking,
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import { Image } from "expo-image";
 import Carousel from "react-native-reanimated-carousel";
-import axios from "axios";
 import { Colors } from "../../constants/Colors";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { blurhash } from "../../utils";
 
 export const RestaurantInfo = ({ restaurantData = [] }) => {
   const [restaurants, setRestaurants] = useState([]);
@@ -73,7 +73,6 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
   }, [restaurantData]);
 
   const handleExternalLink = data => {
-    console.log(`data`, data.booking_url);
     if (data?.booking_url?.includes("example.com")) {
       const query = encodeURIComponent(data.name + data.address);
       const googleSearchUrl = `https://www.google.com/search?q=${query}`;
@@ -128,6 +127,8 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
               source={require("../../assets/images/restaurant.jpg")}
               style={{ width: "100%", height: "100%", borderRadius: 15 }}
               resizeMode="cover"
+              placeholder={blurhash}
+              transition={500}
             />
             <View
               style={{

@@ -24,7 +24,7 @@ const isIphone = Platform.OS === "ios";
 export default function SelectBudget() {
   const [selectedBudget, setSelectedBudget] = useState(null);
 
-  const route = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
   const { setTripData } = useContext(CreateTripContext);
 
@@ -50,7 +50,7 @@ export default function SelectBudget() {
         Toast.show({
           type: "info",
           position: "top",
-          text1: "Please select your budget",
+          text2: "Please select your budget",
           //  text2: "",
           visibilityTime: 2000,
           autoHide: true,
@@ -61,7 +61,7 @@ export default function SelectBudget() {
       }
       return;
     }
-    route.push("/createTrip/reviewTrip");
+    router.push("/createTrip/reviewTrip");
   };
   return (
     <SafeAreaView

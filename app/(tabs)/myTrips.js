@@ -5,7 +5,6 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
-  BackHandler,
   Platform,
   ToastAndroid,
 } from "react-native";
@@ -18,25 +17,24 @@ import {
 } from "react-native-responsive-screen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { StartNewTrip } from "../../components";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { auth } from "../../config/fireBaseConfig";
-import { getMyTrips } from "../../utils";
+import { getMyTrips, isSameDay } from "../../utils";
 import UserTripList from "../../components/MyTrips/userTripList";
-import { useFocusEffect } from "@react-navigation/native";
 import { UsePreventBack } from "../../hooks";
 import Toast from "react-native-toast-message";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 const isIphone = Platform.OS === "ios";
 
 export default function MyTrip() {
   const [addTripIsLoading, setAddTripIsLoading] = useState(false);
   const user = auth.currentUser;
-  const route = useRouter();
+  const router = useRouter();
   const [userTrips, setUserTrips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false); // состояние для pull-to-refresh
 
-  UsePreventBack();
+  // UsePreventBack();
 
   useEffect(() => {
     if (user) {
@@ -60,22 +58,18 @@ export default function MyTrip() {
     }
   };
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await GetAllUserTrips();
-    setRefreshing(false);
-  }, []);
-
   const handleNewTrip = async () => {
     try {
       setAddTripIsLoading(true);
       const trips = await getMyTrips(user.uid);
-      if (trips.length >= 15) {
+      const lastGeneratedAtIsSameDay = await isSameDay(user.uid);
+
+      if (trips.length >= 5) {
         if (isIphone) {
           Toast.show({
             type: "error",
             position: "top",
-            text1:
+            text2:
               "Travel limit of 15 trips has been exceeded. Please remove a trip and try again.",
             visibilityTime: 2000,
             autoHide: true,
@@ -87,11 +81,31 @@ export default function MyTrip() {
             ToastAndroid.LONG
           );
         }
-      } else {
-        route.push("/createTrip/searchStartLocation");
+        return;
       }
+
+      if (lastGeneratedAtIsSameDay) {
+        if (isIphone) {
+          Toast.show({
+            type: "error",
+            position: "top",
+            text2:
+              "You can generate only one article per day. Please try again tomorrow.",
+            visibilityTime: 2000,
+            autoHide: true,
+            topOffset: 50,
+          });
+        } else {
+          ToastAndroid.show(
+            "You can generate only one article per day. Please try again tomorrow.",
+            ToastAndroid.LONG
+          );
+        }
+        return;
+      }
+      router.push("/createTrip/searchStartLocation");
     } catch (error) {
-      console.log(`Error in handleNewTrip:`, handleNewTrip);
+      console.log(`Error in handleNewTrip:`, error);
     } finally {
       setTimeout(() => {
         setAddTripIsLoading(false);
@@ -115,16 +129,17 @@ export default function MyTrip() {
           height: "100%",
         }}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isLoading} onRefresh={GetAllUserTrips} />
         }
       >
-        <View
+        <Animated.View
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
           }}
+          entering={FadeInDown.duration(400).delay(100).springify().damping(6)}
         >
           <Text style={{ fontFamily: "outfit-bolt", fontSize: hp(3.5) }}>
             My Trips
@@ -133,12 +148,10 @@ export default function MyTrip() {
             disabled={addTripIsLoading}
             onPress={handleNewTrip}
             style={{ opacity: addTripIsLoading ? 0.3 : 1 }}
-            // onPress={() => route.push("/createTrip/searchStartLocation")}
           >
             <Ionicons name="add-circle" size={40} color="black" />
           </TouchableOpacity>
-        </View>
-
+        </Animated.View>
         {isLoading ? (
           <ActivityIndicator
             style={{ marginTop: 40 }}
@@ -146,9 +159,12 @@ export default function MyTrip() {
             color={Colors.primary}
           />
         ) : userTrips?.length === 0 ? (
-          <StartNewTrip />
+          <StartNewTrip handleNewTrip={handleNewTrip} />
         ) : (
-          <UserTripList userTrips={userTrips} />
+          <UserTripList
+            userTrips={userTrips}
+            GetAllUserTrips={GetAllUserTrips}
+          />
         )}
       </ScrollView>
     </SafeAreaView>

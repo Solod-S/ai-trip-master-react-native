@@ -14,9 +14,9 @@ import { CreateTripContext } from "../../context";
 
 export default function SelectTraveler() {
   const [selectedTraveler, setSelectedTraveler] = useState(null);
-  const { tripData, setTripData } = useContext(CreateTripContext);
+  const { setTripData } = useContext(CreateTripContext);
 
-  const route = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
   useEffect(() => {
     setTripData(prev => ({ ...prev, travelerCount: selectedTraveler }));
@@ -68,7 +68,7 @@ export default function SelectTraveler() {
       <View>
         <TouchableOpacity
           disabled={!selectedTraveler}
-          onPress={() => route.push("/createTrip/selectDates")}
+          onPress={() => router.push("/createTrip/selectDates")}
           style={{
             padding: 15,
             paddingHorizontal: 30,
