@@ -17,7 +17,7 @@
 
 # AI Trip Master
 
-![AI Trip Master](/assets/Banner-min.jpg)
+![AI Trip Master](/assets/banner-min.jpg)
 
 **Project Description:**
 
@@ -35,7 +35,8 @@ Key Features:
 AI Trip Master is the perfect companion for travelers, making trip planning effortless and enjoyable! 🌍✈️
 
  <div align="center">
-
+ <br />
+ 
 ![AI Trip Master](/assets/video.gif)
 
   <br />
