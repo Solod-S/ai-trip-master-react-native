@@ -125,7 +125,7 @@ export const HotelInfo = ({ hotelData = [] }) => {
               //   source={{ uri: item?.img_url }} // Use img_url from updated hotel data
               source={require("../../assets/images/hotel.jpg")}
               style={{ width: "100%", height: "100%", borderRadius: 15 }}
-              resizeMode="cover"
+              contentFit="cover"
               placeholder={blurhash}
               transition={500}
             />

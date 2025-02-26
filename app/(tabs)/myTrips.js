@@ -84,25 +84,25 @@ export default function MyTrip() {
         return;
       }
 
-      if (lastGeneratedAtIsSameDay) {
-        if (isIphone) {
-          Toast.show({
-            type: "error",
-            position: "top",
-            text2:
-              "You can generate only one article per day. Please try again tomorrow.",
-            visibilityTime: 2000,
-            autoHide: true,
-            topOffset: 50,
-          });
-        } else {
-          ToastAndroid.show(
-            "You can generate only one article per day. Please try again tomorrow.",
-            ToastAndroid.LONG
-          );
-        }
-        return;
-      }
+      // if (lastGeneratedAtIsSameDay) {
+      //   if (isIphone) {
+      //     Toast.show({
+      //       type: "error",
+      //       position: "top",
+      //       text2:
+      //         "You can generate only one article per day. Please try again tomorrow.",
+      //       visibilityTime: 2000,
+      //       autoHide: true,
+      //       topOffset: 50,
+      //     });
+      //   } else {
+      //     ToastAndroid.show(
+      //       "You can generate only one article per day. Please try again tomorrow.",
+      //       ToastAndroid.LONG
+      //     );
+      //   }
+      //   return;
+      // }
       router.push("/createTrip/searchStartLocation");
     } catch (error) {
       console.log(`Error in handleNewTrip:`, error);

@@ -1,5 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../config/fireBaseConfig";
+import moment from "moment";
 
 export const isSameDay = async uid => {
   try {
@@ -9,17 +10,11 @@ export const isSameDay = async uid => {
     if (docSnap.exists()) {
       const lastGeneratedAt = docSnap.data().lastGeneratedAt?.toDate();
       if (!lastGeneratedAt) return false;
-      const today = new Date();
 
-      const isSameDay =
-        lastGeneratedAt &&
-        lastGeneratedAt.getFullYear() === today.getFullYear() &&
-        lastGeneratedAt.getMonth() === today.getMonth() &&
-        lastGeneratedAt.getDate() === today.getDate();
-
-      return isSameDay;
+      return moment(lastGeneratedAt).isSame(moment(), "day");
     }
   } catch (error) {
     console.log(`Error in isSameDay: `, error);
+    return false;
   }
 };

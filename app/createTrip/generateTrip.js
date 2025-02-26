@@ -1,4 +1,5 @@
 import { Platform, Text, ToastAndroid, View } from "react-native";
+import axios from "axios";
 import { doc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
@@ -13,8 +14,9 @@ import Toast from "react-native-toast-message";
 import { db, auth } from "../../config/fireBaseConfig";
 import moment from "moment";
 import { Loading } from "../../components/CreateTrip";
-import { chatSession, prompt } from "../../config/GeminiResponse";
+import { chatSession, prompt, openAIprompt } from "../../config/GeminiResponse";
 import { UsePreventBack } from "../../hooks";
+import { generateTripWithGeminiAI, generateTripWithOpenAI } from "../../utils";
 
 const isIphone = Platform.OS === "ios";
 
@@ -25,43 +27,63 @@ export default function GenerateTrip() {
   const [isLoading, setIsLoading] = useState();
   const user = auth.currentUser;
 
+  // const GenerateAITrip = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     let generatedSuccess = null;
+  //     const openAIresult = await generateTripWithOpenAI(tripData);
+
+  //     if (openAIresult) {
+  //       generatedSuccess = true;
+  //     } else {
+  //       const geminiAIresult = await generateTripWithGeminiAI(tripData);
+
+  //       if (geminiAIresult) {
+  //         generatedSuccess = true;
+  //       }
+  //     }
+
+  //     if (!generatedSuccess) {
+  //       if (isIphone) {
+  //         Toast.show({
+  //           type: "error",
+  //           position: "top",
+  //           text2: "Error Occurred! AI could not create trip.",
+  //           //  text2: "",
+  //           visibilityTime: 2000,
+  //           autoHide: true,
+  //           topOffset: 50,
+  //         });
+  //       } else {
+  //         ToastAndroid.show("Error Occurred! AI could not create trip.");
+  //       }
+
+  //       router.replace("/createTrip/generateTripError");
+  //       return;
+  //     }
+
+  //     router.replace("(tabs)/myTrips");
+  //   } catch (error) {
+  //     console.error(
+  //       "An error occurred in Gemini response/ Firebase save:",
+  //       error
+  //     );
+  //     router.replace("/createTrip/generateTripError");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const GenerateAITrip = async () => {
     setIsLoading(true);
 
-    const finalAIPrompt = prompt
-      .replace("{source}", tripData?.srcLocationInfo?.name)
-      .replace("{location}", tripData?.locationInfo?.name)
-      .replace("{traveler}", tripData?.travelerCount?.title)
-      .replace("{budget}", tripData?.budget)
-      .replace("{startDate}", moment(tripData?.startDate).format("DD MMM"))
-      .replace("{endDate}", moment(tripData?.endDate).format("DD MMM"));
-
-    // console.log("Final AI prompt:", finalAIPrompt);
-
     try {
-      const result = await chatSession.sendMessage(finalAIPrompt);
-      if (!result) {
-        ToastAndroid.show("Error Occurred! AI could not create trip.");
-        router.replace("/createTrip/generateTripError");
+      let generatedSuccess = await attemptToGenerateTrip();
+
+      if (!generatedSuccess) {
+        handleGenerationError();
         return;
       }
-
-      const jsonResponse = await JSON.parse(result.response.text());
-      console.log("JSON format result from Gemini API:", jsonResponse);
-      const docId = Date.now().toString();
-
-      await setDoc(doc(db, "UserTrips", docId), {
-        docId,
-        userEmail: user.email,
-        userUid: user.uid,
-        tripDetails: jsonResponse,
-        tripData: JSON.stringify(tripData) || "",
-      });
-
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        lastGeneratedAt: Timestamp.now(),
-      });
 
       router.replace("(tabs)/myTrips");
     } catch (error) {
@@ -74,6 +96,35 @@ export default function GenerateTrip() {
       setIsLoading(false);
     }
   };
+
+  const attemptToGenerateTrip = async () => {
+    const geminiAIresult = await generateTripWithGeminiAI(tripData);
+    if (geminiAIresult) {
+      return true;
+    }
+    const openAIresult = await generateTripWithOpenAI(tripData);
+    return openAIresult ? true : false;
+  };
+
+  const handleGenerationError = () => {
+    const errorMessage = "Error Occurred! AI could not create trip.";
+
+    if (isIphone) {
+      Toast.show({
+        type: "error",
+        position: "top",
+        text2: errorMessage,
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 50,
+      });
+    } else {
+      ToastAndroid.show(errorMessage);
+    }
+
+    router.replace("/createTrip/generateTripError");
+  };
+
   UsePreventBack();
 
   useEffect(() => {

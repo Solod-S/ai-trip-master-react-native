@@ -73,7 +73,11 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
   }, [restaurantData]);
 
   const handleExternalLink = data => {
-    if (data?.booking_url?.includes("example.com")) {
+    if (
+      data?.booking_url?.includes("example.com") ||
+      data?.booking_url?.includes("booking") ||
+      data?.booking_url === ""
+    ) {
       const query = encodeURIComponent(data.name + data.address);
       const googleSearchUrl = `https://www.google.com/search?q=${query}`;
 
@@ -126,7 +130,7 @@ export const RestaurantInfo = ({ restaurantData = [] }) => {
               //   source={{ uri: item?.img_url }} // Use img_url from updated restaurant data
               source={require("../../assets/images/restaurant.jpg")}
               style={{ width: "100%", height: "100%", borderRadius: 15 }}
-              resizeMode="cover"
+              contentFit="cover"
               placeholder={blurhash}
               transition={500}
             />
