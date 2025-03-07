@@ -205,13 +205,24 @@ export default function LogIn() {
               placeholder="Enter Password"
             />
           </View>
+          <View
+            style={{ marginTop: 10, display: "flex", alignItems: "flex-end" }}
+          >
+            <TouchableOpacity
+              onPress={() => router.push("auth/restorePassword")}
+            >
+              <Text style={{ fontSize: hp(2), color: "gray" }}>
+                Restore Password
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           <View>
             {/* Sign In  Btn*/}
             {loading ? (
               <View
                 style={{
-                  marginTop: 40,
+                  marginTop: 30,
                   padding: 15,
                   backgroundColor: Colors.primary,
                   borderRadius: 15,
@@ -223,7 +234,7 @@ export default function LogIn() {
               <TouchableOpacity
                 onPress={() => onLoginWithEmailAndPassword()}
                 style={{
-                  marginTop: 40,
+                  marginTop: 30,
                   padding: 15,
                   backgroundColor: Colors.primary,
                   borderRadius: 15,

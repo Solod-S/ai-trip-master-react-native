@@ -64,45 +64,45 @@ export default function MyTrip() {
       const trips = await getMyTrips(user.uid);
       const lastGeneratedAtIsSameDay = await isSameDay(user.uid);
 
-      if (trips.length >= 5) {
+      if (trips.length >= 3) {
         if (isIphone) {
           Toast.show({
             type: "error",
             position: "top",
             text2:
-              "Travel limit of 15 trips has been exceeded. Please remove a trip and try again.",
+              "Travel limit of 3 trips has been exceeded. Please remove a trip and try again.",
             visibilityTime: 2000,
             autoHide: true,
             topOffset: 50,
           });
         } else {
           ToastAndroid.show(
-            "Travel limit of 5 trips has been exceeded. Please remove a trip and try again.",
+            "Travel limit of 3 trips has been exceeded. Please remove a trip and try again.",
             ToastAndroid.LONG
           );
         }
         return;
       }
 
-      // if (lastGeneratedAtIsSameDay) {
-      //   if (isIphone) {
-      //     Toast.show({
-      //       type: "error",
-      //       position: "top",
-      //       text2:
-      //         "You can generate only one article per day. Please try again tomorrow.",
-      //       visibilityTime: 2000,
-      //       autoHide: true,
-      //       topOffset: 50,
-      //     });
-      //   } else {
-      //     ToastAndroid.show(
-      //       "You can generate only one article per day. Please try again tomorrow.",
-      //       ToastAndroid.LONG
-      //     );
-      //   }
-      //   return;
-      // }
+      if (lastGeneratedAtIsSameDay) {
+        if (isIphone) {
+          Toast.show({
+            type: "error",
+            position: "top",
+            text2:
+              "You can generate only one article per day. Please try again tomorrow.",
+            visibilityTime: 2000,
+            autoHide: true,
+            topOffset: 50,
+          });
+        } else {
+          ToastAndroid.show(
+            "You can generate only one article per day. Please try again tomorrow.",
+            ToastAndroid.LONG
+          );
+        }
+        return;
+      }
       router.push("/createTrip/searchStartLocation");
     } catch (error) {
       console.log(`Error in handleNewTrip:`, error);

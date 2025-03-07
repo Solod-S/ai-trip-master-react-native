@@ -52,6 +52,10 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(notificationScreen)"
+          options={{ headerShown: false }}
+        />
       </Stack>
       <Toast />
       <MainLayout />

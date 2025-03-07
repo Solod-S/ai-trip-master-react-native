@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import {
   View,
   Text,
@@ -8,7 +7,7 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { Colors } from "../../constants/Colors";
 import axios from "axios";
 import {
@@ -20,38 +19,60 @@ export const PlacesInfo = ({ placesData }) => {
   const [coordinates, setCoordinates] = useState([]);
 
   const openMap = (latitude, longitude) => {
-    const url = `https://www.google.com/maps/?q=${latitude},${longitude}`;
-    Linking.openURL(url).catch(err => console.error("Error opening map:", err));
+    try {
+      const url = `https://www.google.com/maps/?q=${latitude},${longitude}`;
+      Linking.openURL(url).catch(err =>
+        console.error("Error opening map:", err)
+      );
+    } catch (error) {
+      console.error("Failed to open map:", error);
+    }
   };
 
   useEffect(() => {
     const fetchCoordinates = async () => {
-      if (placesData || placesData?.length != 0) {
-        try {
-          const placeSearchPromises = placesData.map(async place => {
-            if (!place?.name && place?.address) return null;
-            const placeSearchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
-              place?.name
-            )},${encodeURIComponent(place?.address)}&key=${
-              process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY
-            }`;
+      try {
+        if (!placesData) return;
 
+        if (!Array.isArray(placesData) || placesData.length === 0) {
+          console.log("Invalid placesData:", placesData);
+          return;
+        }
+        const placeSearchPromises = placesData.map(async place => {
+          if (!place?.name || !place?.address) return null;
+
+          const placeSearchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+            place.name
+          )},${encodeURIComponent(place.address)}&key=${
+            process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY
+          }`;
+
+          try {
             const response = await axios.get(placeSearchURL);
+            const results = response?.data?.results;
+
+            if (!Array.isArray(results) || results?.length === 0) {
+              return null;
+            }
+
             const location = response?.data?.results?.[0]?.geometry?.location;
 
             if (location) {
               return { latitude: location.lat, longitude: location.lng };
             } else {
-              console.log(`Place search failed for place: ${place?.name}`);
+              console.warn(`No location found for: ${place.name}`);
               return null;
             }
-          });
+          } catch (err) {
+            console.error(`Failed to fetch location for: ${place.name}`, err);
+            return null;
+          }
+        });
 
-          const resolvedCoordinates = await Promise.all(placeSearchPromises);
-          setCoordinates(resolvedCoordinates.filter(coord => coord !== null));
-        } catch (error) {
-          console.log("An error occurred while fetching coordinates:", error);
-        }
+        const resolvedCoordinates = await Promise.all(placeSearchPromises);
+        setCoordinates(resolvedCoordinates.filter(coord => coord !== null));
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
       }
     };
 
@@ -60,71 +81,69 @@ export const PlacesInfo = ({ placesData }) => {
 
   return (
     <View>
-      <Text
-        style={{
-          fontFamily: "outfit-bold",
-          fontSize: 23,
-          marginVertical: 20,
-          paddingLeft: 15,
-        }}
-      >
-        Places
-      </Text>
+      <Text style={styles.title}>Places</Text>
       <FlatList
         nestedScrollEnabled
         data={placesData}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={
-          ({ item, index }) =>
-            coordinates[index] ? (
-              <View style={styles.card}>
+        renderItem={({ item, index }) => {
+          const coord = coordinates[index];
+
+          if (!coord) {
+            return (
+              <View style={styles.loadingCard}>
+                <Text style={styles.loadingText}>Loading {item?.name}...</Text>
+              </View>
+            );
+          }
+
+          return (
+            <View style={styles.card}>
+              {coord?.latitude && coord?.longitude && (
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() =>
-                    openMap(
-                      coordinates[index].latitude,
-                      coordinates[index].longitude
-                    )
-                  }
+                  onPress={() => openMap(coord?.latitude, coord?.longitude)}
                 >
                   <MapView
+                    provider={PROVIDER_GOOGLE}
                     style={styles.map}
                     region={{
-                      latitude: coordinates[index].latitude,
-                      longitude: coordinates[index].longitude,
+                      latitude: coord?.latitude,
+                      longitude: coord?.longitude,
                       latitudeDelta: 0.02,
                       longitudeDelta: 0.02,
                     }}
                     showsUserLocation={false}
-                    loadingEnabled={true}
+                    loadingEnabled={false}
                   >
                     <Marker
-                      coordinate={coordinates[index]}
-                      title={item.name}
-                      description={item.description}
+                      coordinate={coord}
+                      title={item?.name}
+                      description={item?.description}
                     />
                   </MapView>
                 </TouchableOpacity>
-                <View style={styles.infoContainer}>
-                  <Text style={styles.name}>{item.name}</Text>
-                  <Text style={styles.description}>{item.description}</Text>
-                  <Text style={styles.bestTimes}>
-                    Best time to visit: {item.best_times_to_visit}
+              )}
+
+              <View style={styles.infoContainer}>
+                <Text style={styles.name}>{item?.name}</Text>
+                <Text style={styles.description}>{item?.description}</Text>
+                <Text style={styles.bestTimes}>
+                  Best time to visit: {item?.best_times_to_visit}
+                </Text>
+                <Text style={styles.entryFee}>
+                  Entry fee: {item?.entry_fees}
+                </Text>
+                <Text style={styles.address}>Address: {item?.address}</Text>
+                <View style={styles.ratingContainer}>
+                  <Text style={styles.rating}>
+                    Rating: {item?.rating} ({item?.total_reviews} reviews)
                   </Text>
-                  <Text style={styles.entryFee}>
-                    Entry fee: {item.entry_fees}
-                  </Text>
-                  <Text style={styles.address}>Address: {item.address}</Text>
-                  <View style={styles.ratingContainer}>
-                    <Text style={styles.rating}>
-                      Rating: {item.rating} ({item.total_reviews} reviews)
-                    </Text>
-                  </View>
                 </View>
               </View>
-            ) : null
-          // <Text>Loading...</Text>
-        }
+            </View>
+          );
+        }}
         contentContainerStyle={styles.listContent}
       />
     </View>
@@ -132,12 +151,30 @@ export const PlacesInfo = ({ placesData }) => {
 };
 
 const styles = StyleSheet.create({
+  title: {
+    fontFamily: "outfit-bold",
+    fontSize: 23,
+    marginVertical: 20,
+    paddingLeft: 15,
+  },
   card: {
     backgroundColor: Colors.lightGray,
     borderRadius: 10,
     padding: 15,
     marginBottom: 20,
     elevation: 3,
+  },
+  loadingCard: {
+    backgroundColor: Colors.lightGray,
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  loadingText: {
+    fontSize: hp(2),
+    color: "#999",
+    fontFamily: "outfit-medium",
   },
   map: {
     height: 200,

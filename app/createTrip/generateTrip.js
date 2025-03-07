@@ -27,53 +27,6 @@ export default function GenerateTrip() {
   const [isLoading, setIsLoading] = useState();
   const user = auth.currentUser;
 
-  // const GenerateAITrip = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     let generatedSuccess = null;
-  //     const openAIresult = await generateTripWithOpenAI(tripData);
-
-  //     if (openAIresult) {
-  //       generatedSuccess = true;
-  //     } else {
-  //       const geminiAIresult = await generateTripWithGeminiAI(tripData);
-
-  //       if (geminiAIresult) {
-  //         generatedSuccess = true;
-  //       }
-  //     }
-
-  //     if (!generatedSuccess) {
-  //       if (isIphone) {
-  //         Toast.show({
-  //           type: "error",
-  //           position: "top",
-  //           text2: "Error Occurred! AI could not create trip.",
-  //           //  text2: "",
-  //           visibilityTime: 2000,
-  //           autoHide: true,
-  //           topOffset: 50,
-  //         });
-  //       } else {
-  //         ToastAndroid.show("Error Occurred! AI could not create trip.");
-  //       }
-
-  //       router.replace("/createTrip/generateTripError");
-  //       return;
-  //     }
-
-  //     router.replace("(tabs)/myTrips");
-  //   } catch (error) {
-  //     console.error(
-  //       "An error occurred in Gemini response/ Firebase save:",
-  //       error
-  //     );
-  //     router.replace("/createTrip/generateTripError");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const GenerateAITrip = async () => {
     setIsLoading(true);
 

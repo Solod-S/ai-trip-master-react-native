@@ -4,9 +4,12 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, db } from "../config/fireBaseConfig.js";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import Toast from "react-native-toast-message";
 
 const useAuthStore = create(set => ({
   user: null,
@@ -34,6 +37,20 @@ const useAuthStore = create(set => ({
   login: async (email, password) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
+      const { user } = response;
+      if (user.emailVerified === false) {
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: "Failed",
+          text2: "Email not verified.",
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
+        return;
+      }
+      set({ user: response.user, isAuthenticated: true });
       return { success: true, data: response.user };
     } catch (error) {
       console.log("Error login:", error);
@@ -65,14 +82,23 @@ const useAuthStore = create(set => ({
         email,
         password
       );
-
+      const { user } = response;
+      await sendEmailVerification(user);
       await setDoc(doc(db, "users", response.user.uid), {
         email,
         fullName,
         userId: response.user.uid,
         lastGeneratedAt: null,
       });
-
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Success",
+        text2: "Account activation email sent",
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 50,
+      });
       return { success: true, data: response.user };
     } catch (error) {
       console.log("Error register:", error);
@@ -84,11 +110,46 @@ const useAuthStore = create(set => ({
     }
   },
 
+  resetPassword: async email => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Success",
+        text2: "Password reset email sent",
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 50,
+      });
+      return { success: true };
+    } catch (error) {
+      console.log(`Error in resetPassword:`, error);
+      let msg = error.message;
+      if (msg.includes("invalid-email")) msg = "Invalid email";
+      if (msg.includes("user-not-found")) msg = "User not found";
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Failed",
+        text2: msg
+          .replace("FirebaseError: ", "")
+          .replace("Firebase: ", "")
+          .replace("auth/", "")
+          .replace(/-/g, " "),
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 50,
+      });
+      return { success: false };
+    }
+  },
+
   initAuthListener: () => {
     set({ isAuthenticated: undefined }); // Устанавливаем состояние в неопределённое
     const unsubscribe = onAuthStateChanged(auth, async user => {
       // console.log("onAuthStateChanged triggered", user); // Логируем пользователя
-      if (user) {
+      if (user && user.emailVerified) {
         set({ user, isAuthenticated: true });
         await useAuthStore.getState().updateUserData(user.uid); // Загружаем доп. данные пользователя
       } else {
@@ -97,20 +158,6 @@ const useAuthStore = create(set => ({
     });
     return unsubscribe;
   },
-
-  // initAuthListener: () => {
-  //   set({ isAuthenticated: undefined }); // Устанавливаем состояние в неопределённое
-  //   const unsubscribe = onAuthStateChanged(auth, async user => {
-  //     console.log(`!`, user.email);
-  //     if (user) {
-  //       set({ user, isAuthenticated: true });
-  //       await useAuthStore.getState().updateUserData(user.uid); // Загружаем доп. данные пользователя
-  //     } else {
-  //       set({ user: null, isAuthenticated: false });
-  //     }
-  //   });
-  //   return unsubscribe;
-  // },
 }));
 
 export default useAuthStore;

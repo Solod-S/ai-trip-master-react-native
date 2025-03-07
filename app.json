@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ai-trip-master",
+    "name": "Ai Trip Master",
     "slug": "ai-trip-master",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,10 +12,17 @@
       "supportsTablet": true
     },
     "android": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY_ЗАМЕНИТЬ!!"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.solod098.aitripmaster",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +43,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5226fc3a-d2cb-4f0a-b0ea-9fadd6007ccd"
+      }
     }
   }
 }
