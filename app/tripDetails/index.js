@@ -15,7 +15,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Animated, { FadeInDown } from "react-native-reanimated";
 
 import moment from "moment";
 import { blurhash } from "../../utils";
@@ -107,9 +106,7 @@ function TripDetails() {
           />
         )}
 
-        <Animated.View
-          entering={FadeInDown.duration(400).delay(100).springify().damping(6)}
-        >
+        <View>
           <View style={styles.infoContainer}>
             <Text style={styles.tripName}>
               {parsedTripData?.locationInfo?.name || "No Name Available"}
@@ -163,7 +160,7 @@ function TripDetails() {
               restaurantData={parsedTrip?.tripDetails?.restaurants}
             />
           </View>
-        </Animated.View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

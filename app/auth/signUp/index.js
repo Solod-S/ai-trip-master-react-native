@@ -59,7 +59,7 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      const { success } = await register(email, password, fullName);
+      const { success } = await register(email.trim(), password, fullName);
       if (success) {
         router.replace("emailVerify");
       }

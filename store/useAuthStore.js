@@ -48,7 +48,8 @@ const useAuthStore = create(set => ({
           autoHide: true,
           topOffset: 50,
         });
-        return;
+        await signOut(auth);
+        return { success: false, msg: "Email not verified." };
       }
       set({ user: response.user, isAuthenticated: true });
       return { success: true, data: response.user };
@@ -90,6 +91,7 @@ const useAuthStore = create(set => ({
         userId: response.user.uid,
         lastGeneratedAt: null,
       });
+      await signOut(auth);
       Toast.show({
         type: "success",
         position: "top",
@@ -145,11 +147,24 @@ const useAuthStore = create(set => ({
     }
   },
 
+  // initAuthListener: () => {
+  //   set({ isAuthenticated: undefined }); // Устанавливаем состояние в неопределённое
+  //   const unsubscribe = onAuthStateChanged(auth, async user => {
+  //     // console.log("onAuthStateChanged triggered", user); // Логируем пользователя
+  //     if (user && user.emailVerified) {
+  //       set({ user, isAuthenticated: true });
+  //       await useAuthStore.getState().updateUserData(user.uid); // Загружаем доп. данные пользователя
+  //     } else {
+  //       set({ user: null, isAuthenticated: false });
+  //     }
+  //   });
+  //   return unsubscribe;
+  // },
   initAuthListener: () => {
     set({ isAuthenticated: undefined }); // Устанавливаем состояние в неопределённое
     const unsubscribe = onAuthStateChanged(auth, async user => {
       // console.log("onAuthStateChanged triggered", user); // Логируем пользователя
-      if (user && user.emailVerified) {
+      if (user && user?.emailVerified) {
         set({ user, isAuthenticated: true });
         await useAuthStore.getState().updateUserData(user.uid); // Загружаем доп. данные пользователя
       } else {

@@ -56,7 +56,10 @@ export default function LogIn() {
         return;
       }
       setLoading(true);
-      await login(email, password);
+      const { success } = await login(email.trim(), password);
+      if (success) {
+        router.replace("myTrips");
+      }
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

@@ -37,7 +37,7 @@ export default function MyTrip() {
   // UsePreventBack();
 
   useEffect(() => {
-    if (user) {
+    if (user && user?.uid) {
       GetAllUserTrips();
     }
   }, [user]);
@@ -46,7 +46,7 @@ export default function MyTrip() {
     setIsLoading(true);
 
     try {
-      const trips = await getMyTrips(user.uid);
+      const trips = await getMyTrips(user?.uid);
       setUserTrips(trips);
     } catch (error) {
       console.error(

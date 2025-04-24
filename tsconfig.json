@@ -14,6 +14,7 @@
     "app/index.js",
     "app/_layout.js",
     "constants/Colors.js",
-    "constants/Options.js"
+    "constants/Options.js",
+    "app/(tabs)/myTrips.js"
   ]
 }

@@ -41,8 +41,8 @@ export default function RestorePassword() {
         return;
       }
       setIsLoading(true);
-      const { success } = await resetPassword(email);
-      console.log(`success`, success);
+      const { success } = await resetPassword(email.trim());
+
       if (success) router.replace("emailReset");
     } catch (error) {
       Toast.show({

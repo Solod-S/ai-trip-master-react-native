@@ -23,8 +23,8 @@ const MainLayout = () => {
     //  check if the user is authenticated or not
     if (typeof isAuthenticated == "undefined") return;
     // user in app group
-    const inApp = segments[0] == "(tabs)";
-    if (isAuthenticated && !inApp) {
+    // const inApp = segments[0] == "(tabs)";
+    if (isAuthenticated) {
       // if user authenticated
       // and not in (tabs) => redirect myTrips
       router.replace("myTrips");
